@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🗺️ Guia de Viagem: Curitiba - Carnaval 2026</title>
+    <meta name="description" content="Guia completo de viagem para Curitiba no Carnaval 2026. Roteiros, dicas, informações de voos e muito mais!">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">🗺️ Curitiba 2026</h1>
+            <nav class="nav" id="mainNav">
+                <a href="#home" class="nav-link active">Início</a>
+                <a href="#clima" class="nav-link">Clima</a>
+                <a href="#chegada" class="nav-link">Chegada</a>
+                <a href="#voos" class="nav-link">Voos</a>
+                <a href="#custos" class="nav-link">Custos</a>
+                <a href="#roteiro" class="nav-link">Roteiro</a>
+                <a href="#dicas" class="nav-link">Dicas</a>
+                <a href="#emergencias" class="nav-link">Emergências</a>
+            </nav>
+            <div class="header-actions">
+                <button class="download-pdf-btn" id="downloadPdf" title="Baixar em PDF">
+                    <span class="pdf-icon">📥</span>
+                    <span class="pdf-text">PDF</span>
+                </button>
+                <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="menu-toggle" id="menuToggle">☰</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h2 class="hero-title">Bem-vindo(a) a Curitiba!</h2>
+            <p class="hero-subtitle">Carnaval 2026 • 13 a 18 de Fevereiro</p>
+            <p class="hero-description">Enquanto o Brasil todo pula samba, Curitiba tem uma "vibe" própria no Carnaval: eventos culturais fortíssimos, muito rock/alternativo e parques lindos no verão.</p>
+            <div class="hero-badges">
+                <div class="badge">Chegada 13/02</div>
+                <div class="badge">Chegada 15/02</div>
+            </div>
+            <button class="cta-button" onclick="scrollToSection('roteiro')">Ver Roteiros Completos</button>
+        </div>
+        <div class="hero-image">
+            <div class="floating-card">
+                <span class="card-icon">📅</span>
+                <p class="card-text">13/02 - 18/02</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clima Section -->
+    <section id="clima" class="section">
+        <div class="container">
+            <h2 class="section-title">⛅ Clima e O que Vestir</h2>
+            <div class="weather-card">
+                <div class="weather-icon">☀️</div>
+                <div class="weather-info">
+                    <h3>Verão Curitibano</h3>
+                    <p class="weather-temp">18°C - 32°C</p>
+                    <p class="weather-desc">Dias de sol e calor, com grandes chances de pancadas de chuva no final da tarde.</p>
+                    <p class="weather-desc" style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.85;">
+                        <strong>15-18 de Fev:</strong> Verão instável. Manhãs frescas, tardes quentes (28°C-30°C) e chuva no fim do dia.
+                    </p>
+                </div>
+            </div>
+            <div class="checklist-grid">
+                <div class="checklist-item">
+                    <span class="check-icon">✅</span>
+                    <p><strong>Roupas Leves:</strong> Camisetas, shorts, vestidos, saias</p>
+                </div>
+                <div class="checklist-item">
+                    <span class="check-icon">✅</span>
+                    <p><strong>Tênis Confortável:</strong> Você vai andar muito nos parques</p>
+                </div>
+                <div class="checklist-item">
+                    <span class="check-icon">✅</span>
+                    <p><strong>Casaco Leve:</strong> Para a noite (cardigan ou jaqueta)</p>
+                </div>
+                <div class="checklist-item">
+                    <span class="check-icon">✅</span>
+                    <p><strong>Guarda-chuva:</strong> Indispensável! Tenha sempre na bolsa</p>
+                </div>
+                <div class="checklist-item">
+                    <span class="check-icon">✅</span>
+                    <p><strong>Protetor Solar:</strong> O sol queima mesmo!</p>
+                </div>
+                <div class="checklist-item">
+                    <span class="check-icon">✅</span>
+                    <p><strong>Repelente:</strong> Essencial para os parques (muito importante por causa dos borrachudos)</p>
+                </div>
+                <div class="checklist-item">
+                    <span class="check-icon">✅</span>
+                    <p><strong>Roupas de Algodão:</strong> Mais confortáveis para idosos e crianças</p>
+                </div>
+                <div class="checklist-item">
+                    <span class="check-icon">✅</span>
+                    <p><strong>Tênis Amaciado:</strong> Já usado, muito confortável para caminhadas</p>
+                </div>
+                <div class="checklist-item">
+                    <span class="check-icon">✅</span>
+                    <p><strong>Bonés:</strong> Proteção extra do sol</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chegada Section -->
+    <section id="chegada" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">✈️ Chegada em Curitiba</h2>
+            <div class="arrival-cards">
+                <div class="arrival-card">
+                    <div class="arrival-header">
+                        <span class="arrival-icon">✈️</span>
+                        <h3>Aeroporto Internacional<br>Afonso Pena (CWB)</h3>
+                    </div>
+                    <p class="arrival-location">São José dos Pinhais • 18km do centro</p>
+                    <div class="arrival-times">
+                        <p><strong>Grupo 1 (13/02):</strong> Chegada às 08:50</p>
+                        <p><strong>Grupo 2 (15/02):</strong> Chegada pela manhã</p>
+                    </div>
+                    <div class="transport-options">
+                        <div class="transport-option">
+                            <span class="transport-icon">🚗</span>
+                            <div class="transport-details">
+                                <strong>Uber/99</strong>
+                                <p>R$ 40,00 - R$ 60,00</p>
+                                <small>Mais prático com malas</small>
+                            </div>
+                        </div>
+                        <div class="transport-option">
+                            <span class="transport-icon">🚌</span>
+                            <div class="transport-details">
+                                <strong>Ônibus Executivo</strong>
+                                <p>R$ 20,00</p>
+                                <small>Confortável, com ar-condicionado</small>
+                            </div>
+                        </div>
+                        <div class="transport-option">
+                            <span class="transport-icon">🚍</span>
+                            <div class="transport-details">
+                                <strong>Ligeirinho (208)</strong>
+                                <p>R$ 6,00</p>
+                                <small>Transporte público comum</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="arrival-card">
+                    <div class="arrival-header">
+                        <span class="arrival-icon">🚌</span>
+                        <h3>Rodoferroviária</h3>
+                    </div>
+                    <p class="arrival-location">Centro da cidade</p>
+                    <div class="transport-options">
+                        <div class="transport-option">
+                            <span class="transport-icon">📍</span>
+                            <div class="transport-details">
+                                <strong>Localização Privilegiada</strong>
+                                <p>Em frente ao Mercado Municipal</p>
+                                <small>Fácil acesso a táxis e Uber</small>
+                            </div>
+                        </div>
+                        <div class="transport-option">
+                            <span class="transport-icon">💰</span>
+                            <div class="transport-details">
+                                <strong>Corridas Curtas</strong>
+                                <p>R$ 10,00 - R$ 15,00</p>
+                                <small>Para hotéis centrais</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Voos Section -->
+    <section id="voos" class="section">
+        <div class="container">
+            <h2 class="section-title">✈️ Informações dos Voos</h2>
+            
+            <!-- Primeira Vez Section -->
+            <div class="first-flight-section">
+                <div class="first-flight-header">
+                    <span class="first-flight-icon">🛫</span>
+                    <h3>Voando pela Primeira Vez?</h3>
+                </div>
+                <div class="first-flight-tips">
+                    <div class="first-flight-tip">
+                        <span class="tip-number">1</span>
+                        <div>
+                            <h4>Chegue com Antecedência</h4>
+                            <p>Para voos nacionais, chegue <strong>2 horas antes</strong> do horário de partida. Isso dá tempo para check-in, despachar bagagens e passar pela segurança.</p>
+                        </div>
+                    </div>
+                    <div class="first-flight-tip">
+                        <span class="tip-number">2</span>
+                        <div>
+                            <h4>Documentos Necessários</h4>
+                            <p>Leve <strong>RG ou CNH original</strong> (não aceita cópia). Para menores, certidão de nascimento ou RG. Tenha sempre em mãos!</p>
+                        </div>
+                    </div>
+                    <div class="first-flight-tip">
+                        <span class="tip-number">3</span>
+                        <div>
+                            <h4>Bagagem de Mão</h4>
+                            <p>Máximo <strong>10kg</strong> e medidas específicas (geralmente 55x35x25cm). Líquidos em frascos de até 100ml em saco transparente. Remova objetos metálicos antes do raio-X.</p>
+                        </div>
+                    </div>
+                    <div class="first-flight-tip">
+                        <span class="tip-number">4</span>
+                        <div>
+                            <h4>Em Escalas</h4>
+                            <p>Se tiver conexão, <strong>não precisa pegar a bagagem</strong> (ela vai direto). Fique atento ao portão de embarque e horário. Em aeroportos grandes, pode levar 15-20 min para ir de um portão a outro.</p>
+                        </div>
+                    </div>
+                    <div class="first-flight-tip">
+                        <span class="tip-number">5</span>
+                        <div>
+                            <h4>Enjoo de Voo</h4>
+                            <p>Se sentir enjoo, sente-se perto da janela (meio do avião é mais estável). Evite comer muito antes. Peça um copo d'água à comissária.</p>
+                        </div>
+                    </div>
+                    <div class="first-flight-tip">
+                        <span class="tip-number">6</span>
+                        <div>
+                            <h4>Desembarque</h4>
+                            <p>Ao chegar, siga as placas para <strong>"Bagagens"</strong> ou <strong>"Chegadas"</strong>. Se despachou bagagem, espere na esteira indicada no seu bilhete.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Voos de Ida -->
+            <div class="flights-container">
+                <h3 class="flights-subtitle">🛫 Voos de Ida</h3>
+                
+                <!-- Voo Dia 13 -->
+                <div class="flight-card">
+                    <div class="flight-header">
+                        <span class="flight-date">13/02 (Sexta)</span>
+                        <span class="flight-group">Grupo 1</span>
+                    </div>
+                    <div class="flight-route">
+                        <div class="flight-leg">
+                            <div class="flight-city">
+                                <span class="city-icon">🏙️</span>
+                                <div>
+                                    <strong>São Luís (SLZ)</strong>
+                                    <p class="flight-time">Partida: Manhã</p>
+                                </div>
+                            </div>
+                            <div class="flight-arrow">→</div>
+                            <div class="flight-city">
+                                <span class="city-icon">🏙️</span>
+                                <div>
+                                    <strong>Rio de Janeiro - Galeão (GIG)</strong>
+                                    <p class="flight-time">Escala</p>
+                                </div>
+                            </div>
+                            <div class="flight-arrow">→</div>
+                            <div class="flight-city">
+                                <span class="city-icon">🏙️</span>
+                                <div>
+                                    <strong>Curitiba (CWB)</strong>
+                                    <p class="flight-time arrival">Chegada: 08:50</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flight-info">
+                        <p><strong>Rota:</strong> SLZ → GIG → CWB</p>
+                        <p><strong>Chegada em Curitiba:</strong> 08:50 da manhã</p>
+                    </div>
+                </div>
+
+                <!-- Voo Dia 15 -->
+                <div class="flight-card">
+                    <div class="flight-header">
+                        <span class="flight-date">15/02 (Domingo)</span>
+                        <span class="flight-group">Grupo 2</span>
+                    </div>
+                    <div class="flight-route">
+                        <div class="flight-leg">
+                            <div class="flight-city">
+                                <span class="city-icon">🏙️</span>
+                                <div>
+                                    <strong>São Luís (SLZ)</strong>
+                                    <p class="flight-time">Partida: Manhã</p>
+                                </div>
+                            </div>
+                            <div class="flight-arrow">→</div>
+                            <div class="flight-city">
+                                <span class="city-icon">🏙️</span>
+                                <div>
+                                    <strong>São Paulo - Congonhas (CGH)</strong>
+                                    <p class="flight-time">Escala</p>
+                                </div>
+                            </div>
+                            <div class="flight-arrow">→</div>
+                            <div class="flight-city">
+                                <span class="city-icon">🏙️</span>
+                                <div>
+                                    <strong>Curitiba (CWB)</strong>
+                                    <p class="flight-time arrival">Chegada: Manhã</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flight-info">
+                        <p><strong>Rota:</strong> SLZ → CGH → CWB</p>
+                        <p><strong>Chegada em Curitiba:</strong> Pela manhã</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Voo de Volta -->
+            <div class="flights-container return-flight">
+                <h3 class="flights-subtitle">🛬 Voo de Volta</h3>
+                
+                <div class="flight-card important">
+                    <div class="flight-header">
+                        <span class="flight-date">18/02 (Quarta)</span>
+                        <span class="flight-group">Ambos os Grupos</span>
+                    </div>
+                    <div class="flight-route">
+                        <div class="flight-leg">
+                            <div class="flight-city">
+                                <span class="city-icon">🏙️</span>
+                                <div>
+                                    <strong>Curitiba (CWB)</strong>
+                                    <p class="flight-time">Partida: 05:00</p>
+                                </div>
+                            </div>
+                            <div class="flight-arrow">→</div>
+                            <div class="flight-city">
+                                <span class="city-icon">🏙️</span>
+                                <div>
+                                    <strong>São Paulo - Guarulhos (GRU)</strong>
+                                    <p class="flight-time">Escala</p>
+                                </div>
+                            </div>
+                            <div class="flight-arrow">→</div>
+                            <div class="flight-city">
+                                <span class="city-icon">🏙️</span>
+                                <div>
+                                    <strong>São Luís (SLZ)</strong>
+                                    <p class="flight-time arrival">Chegada: 10:45</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flight-info">
+                        <p><strong>Rota:</strong> CWB → GRU → SLZ</p>
+                        <p><strong>Partida de Curitiba:</strong> 05:00 da manhã</p>
+                        <p><strong>Chegada em São Luís:</strong> 10:45</p>
+                        <p class="flight-warning"><strong>⚠️ Atenção:</strong> Voo muito cedo! Veja as instruções de logística no roteiro do dia 18/02.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dicas de Escala -->
+            <div class="layover-tips">
+                <h3 class="layover-title">💡 Dicas para Escalas</h3>
+                <div class="layover-grid">
+                    <div class="layover-card">
+                        <span class="layover-icon">⏰</span>
+                        <h4>Tempo de Conexão</h4>
+                        <p>Em escalas, você geralmente tem entre 1h e 2h. Use esse tempo para ir ao banheiro, comprar água/lanche e chegar ao próximo portão.</p>
+                    </div>
+                    <div class="layover-card">
+                        <span class="layover-icon">📱</span>
+                        <h4>Confirme o Portão</h4>
+                        <p>Os portões podem mudar! Sempre confira nos painéis do aeroporto ou no app da companhia aérea. Chegue ao portão 30 min antes.</p>
+                    </div>
+                    <div class="layover-card">
+                        <span class="layover-icon">🛄</span>
+                        <h4>Bagagem Despachada</h4>
+                        <p>Em conexões, sua bagagem vai direto. Você só pega no destino final. Não precisa se preocupar em buscar e despachar de novo.</p>
+                    </div>
+                    <div class="layover-card">
+                        <span class="layover-icon">🍽️</span>
+                        <h4>Alimentação</h4>
+                        <p>Aeroportos têm lanchonetes e restaurantes, mas são caros. Leve lanches na bagagem de mão (sanduíche, frutas, biscoitos).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Custos Section -->
+    <section id="custos" class="section">
+        <div class="container">
+            <h2 class="section-title">💰 Custos Médios</h2>
+            <div class="costs-grid">
+                <div class="cost-card">
+                    <h3>🚌 Transporte</h3>
+                    <ul class="cost-list">
+                        <li><strong>Ônibus/BRT:</strong> R$ 6,00</li>
+                        <li><strong>Linha Turismo:</strong> R$ 50,00 (24h)</li>
+                        <li><strong>Uber/99:</strong> R$ 15,00 - R$ 20,00</li>
+                    </ul>
+                </div>
+                <div class="cost-card">
+                    <h3>🍽️ Alimentação</h3>
+                    <ul class="cost-list">
+                        <li><strong>Econômico:</strong> R$ 30,00 - R$ 40,00</li>
+                        <li><strong>Médio:</strong> R$ 60,00 - R$ 90,00</li>
+                        <li><strong>Experiência:</strong> R$ 120,00+</li>
+                    </ul>
+                </div>
+                <div class="cost-card">
+                    <h3>🎫 Ingressos</h3>
+                    <ul class="cost-list">
+                        <li><strong>Parques:</strong> GRATUITO</li>
+                        <li><strong>MON:</strong> R$ 36,00 (inteira)</li>
+                        <li><strong>Torre Panorâmica:</strong> R$ 10,00</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roteiro Section -->
+    <section id="roteiro" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">🗺️ Sugestões de Lugares e Experiências</h2>
+            
+            <!-- Roteiro Tabs -->
+            <div class="roteiro-tabs">
+                <button class="tab-button active" onclick="switchRoteiro('roteiro1')" id="tab1">
+                    <span class="tab-icon">🎸</span>
+                    <span class="tab-text">Roteiro Completo<br><small>Lugares e Experiências</small></span>
+                </button>
+                <button class="tab-button" onclick="switchRoteiro('roteiro2')" id="tab2">
+                    <span class="tab-icon">👨‍👩‍👧‍👦</span>
+                    <span class="tab-text">Roteiro Família<br><small>Pleione Residence</small></span>
+                </button>
+            </div>
+
+            <!-- Roteiro 1: Completo -->
+            <div id="roteiro1" class="roteiro-content active">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">📍<br>Lugares</div>
+                    <div class="timeline-content">
+                        <h3>Chegada e Cartão Postal</h3>
+                        <div class="timeline-details">
+                            <div class="time-slot">
+                                <span class="time">Chegada</span>
+                                <p><strong>Chegada em Curitiba</strong> - Após desembarque e pegar as malas, siga para o hotel.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Tarde</span>
+                                <p><strong>Jardim Botânico</strong> - O clássico! Caminhe pelos jardins franceses e visite a estufa. O pôr do sol é lindo.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Noite</span>
+                                <p><strong>Batel ou Rua Itupava</strong> - Jantar e experimente a <strong>Carne de Onça</strong> (patrimônio cultural) no bar Mercearia Fantinato ou Bar do Alemão.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">📍<br>Lugares</div>
+                    <div class="timeline-content">
+                        <h3>Parques Incríveis e Rock</h3>
+                        <div class="timeline-details">
+                            <div class="time-slot">
+                                <span class="time">Manhã</span>
+                                <p><strong>Ópera de Arame</strong> - Construída sobre um lago, vale a pena entrar.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Almoço</span>
+                                <p><strong>Santa Felicidade</strong> - Restaurante Madalosso (maior das Américas) ou Família Fardo.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Tarde</span>
+                                <p><strong>Parque Tanguá</strong> - Vista mais bonita do pôr do sol, mirante espetacular e cachoeira artificial.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Noite</span>
+                                <p><strong>Psycho Carnival</strong> (Jokers Pub) ou <strong>Largo da Ordem</strong> para ver o movimento histórico.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item highlight">
+                    <div class="timeline-date">📍<br>Lugares</div>
+                    <div class="timeline-content">
+                        <h3>🎃 Zombie Walk e Feirinha</h3>
+                        <div class="timeline-details">
+                            <div class="time-slot">
+                                <span class="time">Manhã</span>
+                                <p><strong>Feirinha do Largo da Ordem</strong> - Obrigatória! Artesanato, comidinhas, antiguidades. Acontece aos domingos.</p>
+                            </div>
+                            <div class="time-slot special">
+                                <span class="time">Tarde</span>
+                                <p><strong>🧟 ZOMBIE WALK!</strong> Milhares de pessoas vestidas de zumbi se concentram na Praça Osório/Boca Maldita e caminham até a Praça Santos Andrade. Super divertido, pacífico e cheio de famílias. Aproveite para tirar fotos incríveis!</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Tarde (alternativa)</span>
+                                <p><strong>Museu Oscar Niemeyer (MON)</strong> - O "Museu do Olho". O gramado atrás dele (Parcão) fica cheio de gente passeando com cachorros.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Noite</span>
+                                <p>Relaxe em algum barzinho do <strong>Centro Cívico</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">📍<br>Lugares</div>
+                    <div class="timeline-content">
+                        <h3>Natureza e Relax</h3>
+                        <div class="timeline-details">
+                            <div class="time-slot">
+                                <span class="time">Manhã</span>
+                                <p><strong>Bosque do Papa</strong> - Casas típicas polonesas e muita área verde. Fica do ladinho do MON.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Tarde</span>
+                                <p><strong>Parque Barigui</strong> - A "praia" do curitibano. Alugue uma bicicleta, veja as capivaras e tome uma água de coco.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Noite</span>
+                                <p><strong>Shopping</strong> - Pátio Batel (luxo), Shopping Estação (museu ferroviário) ou ParkShopping Barigui.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">📍<br>Lugares</div>
+                    <div class="timeline-content">
+                        <h3>Centro Histórico e Gastronomia</h3>
+                        <div class="timeline-details">
+                            <div class="time-slot">
+                                <span class="time">Manhã</span>
+                                <p><strong>Torre Panorâmica</strong> - Visão 360º da cidade. Chegue cedo para evitar fila.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Almoço</span>
+                                <p><strong>Mercado Municipal</strong> - Prove o <strong>Barreado</strong>! Prato típico paranaense (vários restaurantes no piso superior).</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Tarde</span>
+                                <p><strong>Centro Histórico</strong> - Paço da Liberdade, Rua das Flores. Cidade vazia, ótima para fotos de arquitetura.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Noite</span>
+                                <p>Jantar de despedida e fazer as malas. Tente dormir um pouco antes do voo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item important">
+                    <div class="timeline-date">✈️<br>Partida</div>
+                    <div class="timeline-content">
+                        <h3>Informações de Partida</h3>
+                        <div class="timeline-details">
+                            <div class="time-slot">
+                                <span class="time">Aeroporto</span>
+                                <p><strong>Localização:</strong> Aeroporto fica em São José dos Pinhais (30-40 min do centro).</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Transporte</span>
+                                <p><strong>Uber/99:</strong> Use "Agendar Viagem" na noite anterior. <strong>Táxi:</strong> Mais caro, mas garantido.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Dica</span>
+                                <p>Leve uma barra de cereal ou conte com lanchonetes do aeroporto (algumas funcionam 24h).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Roteiro 2: Chegada 15/02 - Família -->
+            <div id="roteiro2" class="roteiro-content">
+                <!-- Hotel Section -->
+                <div class="hotel-section">
+                    <div class="hotel-header">
+                        <span class="hotel-icon">🏨</span>
+                        <div>
+                            <h3 class="hotel-title">Sua Hospedagem: Pleione Residence Flats</h3>
+                            <p class="hotel-address">📍 Rua Chile, 398 - Rebouças</p>
+                        </div>
+                    </div>
+                    <div class="hotel-info-grid">
+                        <div class="hotel-info-card">
+                            <span class="hotel-info-icon">🍳</span>
+                            <h4>Cozinha Completa</h4>
+                            <p>Os flats têm cooktop, micro-ondas e utensílios. Essencial para esquentar mamadeiras, fazer chás ou refeições leves para os idosos sem depender de restaurante o tempo todo.</p>
+                        </div>
+                        <div class="hotel-info-card">
+                            <span class="hotel-info-icon">🎠</span>
+                            <h4>Espaço Kids</h4>
+                            <p>O prédio possui um "Mini Espaço Kids" e playground no térreo. Ótimo para gastar a energia das crianças enquanto vocês esperam o Uber.</p>
+                        </div>
+                        <div class="hotel-info-card">
+                            <span class="hotel-info-icon">📍</span>
+                            <h4>Localização Estratégica</h4>
+                            <p>Vocês estão muito perto do Jardim Botânico (2 km) e do Teatro Paiol (450m - ponto da Linha Turismo).</p>
+                        </div>
+                        <div class="hotel-info-card warning">
+                            <span class="hotel-info-icon">⚠️</span>
+                            <h4>Café da Manhã</h4>
+                            <p><strong>Importante:</strong> Como é um Flat, geralmente não serve café da manhã. <strong>Dica:</strong> Passem num mercado logo na chegada para comprar pão, leite, frutas e café. A cozinha do quarto salvará sua manhã (e o bolso!).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dicas Especiais para Família -->
+                <div class="family-tips-section">
+                    <h3 class="family-tips-title">👵👶 Dicas Especiais: Idosos e Crianças em Curitiba</h3>
+                    <div class="family-tips-grid">
+                        <div class="family-tip-card warning">
+                            <span class="family-tip-icon">⚠️</span>
+                            <h4>O Chão "Traiçoeiro"</h4>
+                            <p>Muitas calçadas são de pedras irregulares. Usem tênis firmes e caminhadas devagar.</p>
+                        </div>
+                        <div class="family-tip-card">
+                            <span class="family-tip-icon">🌡️</span>
+                            <h4>Clima "Cebola"</h4>
+                            <p>O tempo muda rápido. Tenha sempre casaco leve e guarda-chuva na bolsa.</p>
+                        </div>
+                        <div class="family-tip-card">
+                            <span class="family-tip-icon">💧</span>
+                            <h4>Hidratação</h4>
+                            <p>Fevereiro é quente. Levem água nos passeios.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">📍<br>Lugares</div>
+                    <div class="timeline-content">
+                        <h3>Chegada e Vizinhança</h3>
+                        <div class="timeline-details">
+                            <div class="time-slot">
+                                <span class="time">Chegada</span>
+                                <p><strong>Chegada em Curitiba</strong> - Após desembarque e pegar as malas, siga para o hotel. Check-in e deixar malas no Pleione.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">10:30</span>
+                                <p><strong>Jardim Botânico</strong><br>
+                                <em>Distância do Hotel:</em> Muito perto (apenas 2 km). Um Uber rapidinho.<br>
+                                Como o check-in oficial geralmente é à tarde (confirme se liberam antes), deixem as malas e vão ao Jardim Botânico. É plano e lindo. Ótimo para começar a viagem relaxando.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Almoço</span>
+                                <p><strong>Mercado Municipal de Curitiba</strong><br>
+                                Também fica perto do hotel (1.8 km). Tem elevadores e banheiros acessíveis. Ótimo para almoçar e <strong>já comprar itens de café da manhã para o Flat</strong> (pão, leite, frutas, café).</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Tarde</span>
+                                <p>Voltem para o hotel, façam o check-in com calma, descansem os idosos e deixem as crianças no <strong>playground do prédio</strong>.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Noite</span>
+                                <p>Peçam um delivery ou vão a uma pizzaria próxima (o bairro Rebouças tem boas opções).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">📍<br>Lugares</div>
+                    <div class="timeline-content">
+                        <h3>Cultura e Natureza</h3>
+                        <div class="timeline-details">
+                            <div class="time-slot">
+                                <span class="time">Manhã</span>
+                                <p><strong>Museu Oscar Niemeyer (MON)</strong> - Peguem um Uber até o museu.<br>
+                                Estrutura excelente: rampas, elevadores e banheiros adaptados. O "Parcão" (gramado atrás) é ótimo para as crianças.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Almoço</span>
+                                <p>No próprio <strong>Museu</strong> (tem café) ou no <strong>Centro Cívico</strong>.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Tarde</span>
+                                <p><strong>Bosque do Papa</strong> (vizinho ao museu) ou <strong>Ópera de Arame</strong>.<br>
+                                <em>Dica:</em> Na Ópera de Arame, cuidado com as escadas para os idosos. O visual lá de cima já vale a pena.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">📍<br>Lugares</div>
+                    <div class="timeline-content">
+                        <h3>Animais e Gastronomia</h3>
+                        <div class="timeline-details">
+                            <div class="time-slot">
+                                <span class="time">Manhã</span>
+                                <p><strong>Parque Barigui</strong><br>
+                                Vão ver as <strong>Capivaras</strong>! O parque é plano e fácil de andar.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Almoço</span>
+                                <p><strong>Santa Felicidade (Restaurante Madalosso)</strong><br>
+                                É longe do hotel, mas obrigatório. As crianças amam o Espaço Kids gigante e os idosos adoram a comida caseira (polenta/frango).</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Tarde</span>
+                                <p><strong>Parque Tanguá</strong><br>
+                                Assistam ao pôr do sol do mirante superior (o Uber deixa na porta, não precisa subir escadas).</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Noite</span>
+                                <p><strong>Preparação da Madrugada</strong><br>
+                                Deixem as malas prontas. Comprem lanches fáceis (bolacha, fruta) para comerem de madrugada antes de sair, já que o comércio estará fechado.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item important">
+                    <div class="timeline-date">✈️<br>Partida</div>
+                    <div class="timeline-content">
+                        <h3>Informações de Partida</h3>
+                        <div class="timeline-details">
+                            <div class="time-slot">
+                                <span class="time">Aeroporto</span>
+                                <p><strong>Localização:</strong> Do Rebouças ao Aeroporto (São José dos Pinhais) leva cerca de 25-30 minutos sem trânsito.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Antecedência</span>
+                                <p><strong>Chegada no Aeroporto:</strong> Chegue com 1 hora de antecedência, o mínimo recomendado para despachar malas com calma.</p>
+                            </div>
+                            <div class="time-slot">
+                                <span class="time">Transporte</span>
+                                <p><strong>Agende o Uber na noite anterior</strong> ou peça na recepção um táxi de confiança, especialmente para voos muito cedo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Transporte Família Section -->
+    <section id="transporte-familia" class="section">
+        <div class="container">
+            <h2 class="section-title">🚗 Transporte e Deslocamento (Saindo do Pleione)</h2>
+            <div class="family-transport-cards">
+                <div class="family-transport-card recommended">
+                    <div class="transport-badge">⭐ Recomendado</div>
+                    <span class="transport-icon-large">🚗</span>
+                    <h3>Uber/99</h3>
+                    <p>Do Pleione para o Centro ou Jardim Botânico é muito barato (corridas curtas, cerca de <strong>R$ 10 a R$ 15</strong>).</p>
+                </div>
+                <div class="family-transport-card highlight">
+                    <div class="transport-badge">💡 Grande Dica</div>
+                    <span class="transport-icon-large">🚌</span>
+                    <h3>Linha Turismo</h3>
+                    <p><strong>O hotel fica a apenas 450 metros (5 min a pé) do Teatro Paiol.</strong></p>
+                    <p>O Teatro Paiol é um ponto de parada oficial da Linha Turismo (ônibus de 2 andares). Vocês podem caminhar até ali e pegar o ônibus para passear pela cidade toda sem cansar os idosos.</p>
+                    <p><strong>Custo:</strong> R$ 50,00 por pessoa (crianças até 5 anos não pagam no colo).</p>
+                    <p class="transport-warning"><strong>⚠️ Atenção:</strong> O andar de cima é aberto (sol/chuva) e a escada é caracol (difícil para mobilidade reduzida). Idosos podem preferir o andar de baixo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergências Section -->
+    <section id="emergencias" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">🏥 Emergências e Úteis</h2>
+            <div class="emergency-grid">
+                <div class="emergency-card">
+                    <span class="emergency-icon">💊</span>
+                    <h3>Farmácias</h3>
+                    <p>Tem várias na <strong>Av. Presidente Kennedy</strong> ou <strong>Av. Marechal Floriano</strong> (próximas ao hotel).</p>
+                </div>
+                <div class="emergency-card">
+                    <span class="emergency-icon">🏥</span>
+                    <h3>Hospitais</h3>
+                    <p>O hotel fica perto dos hospitais da região central e do <strong>Cajuru (Universitário)</strong>, caso precisem.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dicas Section -->
+    <section id="dicas" class="section">
+        <div class="container">
+            <h2 class="section-title">🎒 Dicas Importantes</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <span class="tip-icon">🦫</span>
+                    <h3>Capivaras</h3>
+                    <p>Você vai vê-las no Barigui ou Tingui. Não tente fazer carinho (são animais selvagens e podem ter carrapatos), apenas tire fotos!</p>
+                </div>
+                <div class="tip-card">
+                    <span class="tip-icon">☔</span>
+                    <h3>Chuvas</h3>
+                    <p>Choveu? Entre num café. Curitiba tem cafés maravilhosos em cada esquina.</p>
+                </div>
+                <div class="tip-card">
+                    <span class="tip-icon">🛡️</span>
+                    <h3>Segurança</h3>
+                    <p>O centro é tranquilo no feriado durante o dia, mas à noite, evite andar a pé em ruas desertas. Use Uber.</p>
+                </div>
+                <div class="tip-card">
+                    <span class="tip-icon">📸</span>
+                    <h3>Fotos</h3>
+                    <p>Aproveite a cidade vazia no feriado para fotos incríveis de arquitetura sem ninguém na frente!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Boa viagem! Aproveite essa Curitiba diferente, vazia e cheia de cultura! 🚌📸</p>
+            <p class="footer-note">Guia de Viagem: Curitiba - Carnaval 2026</p>
+            <p class="footer-credit">Desenvolvido por <strong>PEDRO VICTOR</strong></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
