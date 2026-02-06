@@ -14,33 +14,41 @@ navLinks.forEach(link => {
     });
 });
 
-// Header scroll effect
+// Header scroll effect - optimized
 let lastScroll = 0;
+let headerScrollTimeout;
 const header = document.querySelector('.header');
 
 window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
-    
-    if (currentScroll > 100) {
-        header.classList.add('scrolled');
-    } else {
-        header.classList.remove('scrolled');
+    if (headerScrollTimeout) {
+        cancelAnimationFrame(headerScrollTimeout);
     }
     
-    lastScroll = currentScroll;
+    headerScrollTimeout = requestAnimationFrame(() => {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll > 100) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+        
+        lastScroll = currentScroll;
+    });
 });
 
-// Scroll progress bar
+// Scroll progress bar - debounced
+let scrollTimeout;
 window.addEventListener('scroll', () => {
-    const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrolled = (window.pageYOffset / windowHeight) * 100;
-    document.body.style.setProperty('--scroll-progress', scrolled + '%');
-    
-    // Update progress bar
-    const progressBar = document.querySelector('body::before');
-    if (progressBar) {
-        document.body.style.setProperty('--scroll-width', scrolled + '%');
+    if (scrollTimeout) {
+        cancelAnimationFrame(scrollTimeout);
     }
+    
+    scrollTimeout = requestAnimationFrame(() => {
+        const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (window.pageYOffset / windowHeight) * 100;
+        document.body.style.setProperty('--scroll-width', scrolled + '%');
+    });
 });
 
 // Add scroll progress bar style
@@ -90,10 +98,10 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Intersection Observer for fade-in animations
+// Intersection Observer for fade-in animations - optimized
 const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
+    threshold: 0.05,
+    rootMargin: '0px 0px -50px 0px'
 };
 
 const observer = new IntersectionObserver((entries) => {
@@ -110,25 +118,34 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe all animated elements
+// Observe all animated elements - optimized
 document.addEventListener('DOMContentLoaded', () => {
-    const animatedElements = document.querySelectorAll(
-        '.checklist-item, .arrival-card, .cost-card, .timeline-item, .tip-card, .family-tip-card, .family-transport-card, .emergency-card, .hotel-info-card, .flight-card, .first-flight-tip, .layover-card'
-    );
+    // Use requestIdleCallback for better performance
+    const initAnimations = () => {
+        const animatedElements = document.querySelectorAll(
+            '.checklist-item, .arrival-card, .cost-card, .timeline-item, .tip-card, .family-tip-card, .family-transport-card, .emergency-card, .hotel-info-card, .flight-card, .first-flight-tip, .layover-card'
+        );
+        
+        animatedElements.forEach((el) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            observer.observe(el);
+        });
+        
+        // Initialize timeline items
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        timelineItems.forEach(item => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(30px)';
+        });
+    };
     
-    animatedElements.forEach((el, index) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-        observer.observe(el);
-    });
-    
-    // Initialize timeline items
-    const timelineItems = document.querySelectorAll('.timeline-item');
-    timelineItems.forEach(item => {
-        item.style.opacity = '0';
-        item.style.transform = 'translateY(50px)';
-    });
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(initAnimations, { timeout: 2000 });
+    } else {
+        setTimeout(initAnimations, 100);
+    }
 });
 
 // Add click handlers for CTA buttons
@@ -257,20 +274,31 @@ document.head.appendChild(rippleStyle);
 // Add smooth transitions
 document.documentElement.style.scrollBehavior = 'smooth';
 
-// Loading animation
+// Loading screen - hide quickly
+document.addEventListener('DOMContentLoaded', () => {
+    const loadingScreen = document.getElementById('loadingScreen');
+    if (loadingScreen) {
+        // Hide loading screen after minimal delay
+        setTimeout(() => {
+            loadingScreen.classList.add('hidden');
+            setTimeout(() => loadingScreen.remove(), 500);
+        }, 300);
+    }
+});
+
+// Loading animation - optimized
 window.addEventListener('load', () => {
-    document.body.style.opacity = '0';
-    setTimeout(() => {
-        document.body.style.transition = 'opacity 0.5s ease';
-        document.body.style.opacity = '1';
-    }, 100);
+    // Hide loading screen if still visible
+    const loadingScreen = document.getElementById('loadingScreen');
+    if (loadingScreen) {
+        loadingScreen.classList.add('hidden');
+        setTimeout(() => loadingScreen.remove(), 500);
+    }
     
-    // Animate hero elements
+    // Animate hero elements with reduced delay
     const heroElements = document.querySelectorAll('.hero-title, .hero-subtitle, .hero-description, .hero-badges, .cta-button');
     heroElements.forEach((el, index) => {
-        setTimeout(() => {
-            el.style.animation = `fadeInUp 0.8s ease ${index * 0.2}s both`;
-        }, 200);
+        el.style.animation = `fadeInUp 0.6s ease ${index * 0.1}s both`;
     });
 });
 
@@ -446,6 +474,28 @@ function updateThemeIcon(theme) {
     themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
 }
 
+// Lazy load html2pdf.js
+let html2pdfLoaded = false;
+
+async function loadHtml2Pdf() {
+    if (html2pdfLoaded || typeof html2pdf !== 'undefined') {
+        html2pdfLoaded = true;
+        return;
+    }
+    
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+        script.async = true;
+        script.onload = () => {
+            html2pdfLoaded = true;
+            resolve();
+        };
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
 // PDF Download Function
 const downloadPdfBtn = document.getElementById('downloadPdf');
 
@@ -455,10 +505,15 @@ downloadPdfBtn.addEventListener('click', async () => {
         downloadPdfBtn.disabled = true;
         downloadPdfBtn.style.opacity = '0.6';
         const originalText = downloadPdfBtn.innerHTML;
+        downloadPdfBtn.innerHTML = '<span class="pdf-icon">⏳</span><span class="pdf-text">Carregando...</span>';
+        
+        // Load html2pdf if not loaded
+        await loadHtml2Pdf();
+        
         downloadPdfBtn.innerHTML = '<span class="pdf-icon">⏳</span><span class="pdf-text">Gerando...</span>';
         
         // Hide elements that shouldn't be in PDF
-        const elementsToHide = document.querySelectorAll('.header-actions, .menu-toggle, .cta-button, .tab-button');
+        const elementsToHide = document.querySelectorAll('.header-actions, .menu-toggle, .cta-button, .tab-button, #loadingScreen');
         const originalDisplay = [];
         elementsToHide.forEach((el, index) => {
             originalDisplay[index] = el.style.display;
@@ -470,9 +525,9 @@ downloadPdfBtn.addEventListener('click', async () => {
         const opt = {
             margin: [10, 10, 10, 10],
             filename: 'Guia-Curitiba-Carnaval-2026.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
+            image: { type: 'jpeg', quality: 0.95 },
             html2canvas: { 
-                scale: 2,
+                scale: 1.5,
                 useCORS: true,
                 logging: false,
                 letterRendering: true
