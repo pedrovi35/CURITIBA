@@ -190,6 +190,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
 .logo {
@@ -201,11 +209,39 @@ body {
     background-clip: text;
     transition: transform 0.3s ease;
     cursor: pointer;
+    line-height: 1.2;
 }
 
 .logo:hover {
     transform: scale(1.05);
 }
+
+    .developer-credit {
+        font-size: 0.65rem;
+        color: var(--text-secondary);
+        font-weight: 400;
+        margin: 0;
+        line-height: 1;
+    }
+    
+    .developer-credit strong {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+    
+    @media (max-width: 768px) {
+        .logo-container {
+            gap: 0.15rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+        }
+        
+        .developer-credit {
+            font-size: 0.6rem;
+        }
+    }
 
 .nav {
     display: flex;
@@ -415,7 +451,7 @@ body {
     padding: 3rem;
     border-radius: 25px;
     text-align: center;
-    animation: float 3s ease-in-out infinite;
+    animation: none;
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
@@ -430,7 +466,7 @@ body {
     font-size: 4rem;
     display: block;
     margin-bottom: 1rem;
-    animation: pulse 2s ease-in-out infinite;
+    animation: none;
 }
 
 .card-text {
@@ -439,8 +475,8 @@ body {
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-25px) rotate(2deg); }
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
 }
 
 @keyframes pulse {
@@ -563,7 +599,7 @@ body {
 
 .weather-icon {
     font-size: 5rem;
-    animation: pulse 3s ease-in-out infinite;
+    animation: none;
     filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
 }
 
@@ -630,7 +666,7 @@ body {
 .check-icon {
     font-size: 2rem;
     flex-shrink: 0;
-    animation: checkPulse 2s ease-in-out infinite;
+    animation: none;
 }
 
 @keyframes checkPulse {
@@ -695,7 +731,7 @@ body {
 
 .arrival-icon {
     font-size: 3rem;
-    animation: float 4s ease-in-out infinite;
+    animation: none;
 }
 
 .arrival-header h3 {
@@ -767,10 +803,11 @@ body {
     font-size: 2.5rem;
     flex-shrink: 0;
     transition: transform 0.3s ease;
+    animation: none;
 }
 
 .transport-option:hover .transport-icon {
-    transform: scale(1.2) rotate(5deg);
+    transform: scale(1.1);
 }
 
 .transport-details strong {
@@ -934,12 +971,12 @@ body {
 
 .timeline-item.highlight .timeline-date {
     background: var(--gradient-accent);
-    animation: pulse 2s ease-in-out infinite;
+    animation: none;
 }
 
 .timeline-item.important .timeline-date {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    animation: pulse 2s ease-in-out infinite;
+    animation: none;
 }
 
 .timeline-content {
@@ -1098,12 +1135,8 @@ body {
     font-size: 4rem;
     display: block;
     margin-bottom: 1.5rem;
-    animation: float 3s ease-in-out infinite;
+    animation: none;
     filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
-}
-
-.tip-card:hover .tip-icon {
-    animation: pulse 1s ease-in-out infinite;
 }
 
 .tip-card h3 {
@@ -1235,10 +1268,11 @@ body {
 .tab-icon {
     font-size: 2.5rem;
     transition: transform 0.3s ease;
+    animation: none;
 }
 
 .tab-button:hover .tab-icon {
-    transform: scale(1.2) rotate(5deg);
+    transform: scale(1.1);
 }
 
 .tab-text {
@@ -1308,7 +1342,7 @@ body {
 
 .hotel-icon {
     font-size: 4rem;
-    animation: float 3s ease-in-out infinite;
+    animation: none;
     filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
 }
 
@@ -1358,7 +1392,7 @@ body {
     font-size: 3rem;
     display: block;
     margin-bottom: 1.25rem;
-    animation: float 3s ease-in-out infinite;
+    animation: none;
 }
 
 .hotel-info-card h4 {
@@ -1445,7 +1479,7 @@ body {
     font-size: 3rem;
     display: block;
     margin-bottom: 1.25rem;
-    animation: float 3s ease-in-out infinite;
+    animation: none;
 }
 
 .family-tip-card h4 {
@@ -1527,14 +1561,14 @@ body {
     font-size: 0.9rem;
     font-weight: 600;
     box-shadow: var(--shadow-lg);
-    animation: pulse 2s ease-in-out infinite;
+    animation: none;
 }
 
 .transport-icon-large {
     font-size: 5rem;
     display: block;
     margin-bottom: 1.5rem;
-    animation: float 3s ease-in-out infinite;
+    animation: none;
     filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
 }
 
@@ -1615,7 +1649,7 @@ body {
     font-size: 4rem;
     display: block;
     margin-bottom: 1.5rem;
-    animation: pulse 2s ease-in-out infinite;
+    animation: none;
     filter: drop-shadow(0 4px 10px rgba(231, 76, 60, 0.3));
 }
 
@@ -1673,7 +1707,7 @@ body {
 
 .first-flight-icon {
     font-size: 4rem;
-    animation: float 3s ease-in-out infinite;
+    animation: none;
     filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
 }
 
@@ -1879,7 +1913,7 @@ body {
 
 .city-icon {
     font-size: 2.5rem;
-    animation: float 3s ease-in-out infinite;
+    animation: none;
 }
 
 .flight-city strong {
@@ -1906,7 +1940,7 @@ body {
     color: var(--primary-color);
     font-weight: 700;
     margin: 0 1rem;
-    animation: float 2s ease-in-out infinite;
+    animation: none;
     filter: drop-shadow(0 2px 5px rgba(45, 134, 89, 0.3));
 }
 
@@ -2020,7 +2054,7 @@ body {
     font-size: 3rem;
     display: block;
     margin-bottom: 1.5rem;
-    animation: float 3s ease-in-out infinite;
+    animation: none;
     filter: drop-shadow(0 4px 10px rgba(156, 39, 176, 0.3));
 }
 
