@@ -1,17 +1,52 @@
-// Mobile Menu Toggle
+// Mobile Menu Toggle - Melhorado
 const menuToggle = document.getElementById('menuToggle');
 const nav = document.getElementById('mainNav');
+const navOverlay = document.getElementById('navOverlay');
+const body = document.body;
 
-menuToggle.addEventListener('click', () => {
-    nav.classList.toggle('active');
+function openMenu() {
+    nav.classList.add('active');
+    body.classList.add('menu-open');
+    body.style.overflow = 'hidden';
+    menuToggle.innerHTML = '✕';
+}
+
+function closeMenu() {
+    nav.classList.remove('active');
+    body.classList.remove('menu-open');
+    body.style.overflow = '';
+    menuToggle.innerHTML = '☰';
+}
+
+menuToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (nav.classList.contains('active')) {
+        closeMenu();
+    } else {
+        openMenu();
+    }
 });
+
+// Fechar menu ao clicar no overlay
+if (navOverlay) {
+    navOverlay.addEventListener('click', () => {
+        closeMenu();
+    });
+}
 
 // Close menu when clicking on a link
 const navLinks = document.querySelectorAll('.nav-link');
 navLinks.forEach(link => {
     link.addEventListener('click', () => {
-        nav.classList.remove('active');
+        closeMenu();
     });
+});
+
+// Fechar menu com ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && nav.classList.contains('active')) {
+        closeMenu();
+    }
 });
 
 // Header scroll effect - optimized
@@ -548,25 +583,84 @@ downloadPdfBtn.addEventListener('click', async () => {
         
         downloadPdfBtn.innerHTML = '<span class="pdf-icon">⏳</span><span class="pdf-text">Gerando...</span>';
         
-        // Hide elements that shouldn't be in PDF
-        const elementsToHide = document.querySelectorAll('.header-actions, .menu-toggle, .cta-button, .tab-button, #loadingScreen');
+        // Esconder elementos que não devem aparecer no PDF
+        const elementsToHide = document.querySelectorAll('.header-actions, .menu-toggle, .cta-button, .tab-button, #loadingScreen, .back-to-top');
         const originalDisplay = [];
         elementsToHide.forEach((el, index) => {
             originalDisplay[index] = el.style.display;
             el.style.display = 'none';
         });
         
-        // Get the main content
-        const element = document.body;
+        // Esconder navegação mas manter header
+        const nav = document.querySelector('.nav');
+        const navOriginalDisplay = nav ? nav.style.display : '';
+        if (nav) nav.style.display = 'none';
+        
+        // Garantir que todos os elementos estejam visíveis e sem animações
+        const allElements = document.querySelectorAll('*');
+        const originalOpacities = [];
+        const originalTransforms = [];
+        
+        allElements.forEach((el, index) => {
+            // Salvar estados originais
+            originalOpacities[index] = el.style.opacity;
+            originalTransforms[index] = el.style.transform;
+            
+            // Garantir visibilidade
+            if (el.style.opacity === '0' || el.classList.contains('hidden')) {
+                el.style.opacity = '1';
+                el.style.visibility = 'visible';
+            }
+            
+            // Remover transformações que podem esconder conteúdo
+            if (el.style.transform && el.style.transform.includes('translateY')) {
+                el.style.transform = 'none';
+            }
+        });
+        
+        // Adicionar estilos temporários para PDF
+        const pdfStyle = document.createElement('style');
+        pdfStyle.id = 'pdf-generation-styles';
+        pdfStyle.textContent = `
+            @media print {
+                * {
+                    animation: none !important;
+                    transition: none !important;
+                }
+            }
+            body {
+                background: white !important;
+            }
+            .header {
+                position: relative !important;
+            }
+        `;
+        document.head.appendChild(pdfStyle);
+        
+        // Scroll to top
+        window.scrollTo(0, 0);
+        
+        // Aguardar renderização
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        // Configurações otimizadas do PDF
         const opt = {
             margin: [10, 10, 10, 10],
             filename: 'Guia-Curitiba-Carnaval-2026.pdf',
-            image: { type: 'jpeg', quality: 0.95 },
+            image: { 
+                type: 'jpeg', 
+                quality: 0.98 
+            },
             html2canvas: { 
-                scale: 1.5,
+                scale: 2,
                 useCORS: true,
-                logging: false,
-                letterRendering: true
+                logging: true,
+                letterRendering: true,
+                backgroundColor: '#ffffff',
+                windowWidth: 1200,
+                allowTaint: true,
+                scrollX: 0,
+                scrollY: 0
             },
             jsPDF: { 
                 unit: 'mm', 
@@ -574,16 +668,37 @@ downloadPdfBtn.addEventListener('click', async () => {
                 orientation: 'portrait',
                 compress: true
             },
-            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            pagebreak: { 
+                mode: ['avoid-all', 'css', 'legacy']
+            }
         };
         
-        // Generate PDF
-        await html2pdf().set(opt).from(element).save();
+        // Gerar PDF do body
+        await html2pdf().set(opt).from(document.body).save();
         
-        // Restore elements
+        // Restaurar elementos
         elementsToHide.forEach((el, index) => {
-            el.style.display = originalDisplay[index];
+            if (originalDisplay[index] !== undefined) {
+                el.style.display = originalDisplay[index];
+            }
         });
+        
+        if (nav) nav.style.display = navOriginalDisplay;
+        
+        // Restaurar opacidades e transformações
+        allElements.forEach((el, index) => {
+            if (originalOpacities[index] !== undefined) {
+                el.style.opacity = originalOpacities[index];
+            }
+            if (originalTransforms[index] !== undefined) {
+                el.style.transform = originalTransforms[index];
+            }
+        });
+        
+        // Remover estilos temporários
+        if (pdfStyle.parentNode) {
+            document.head.removeChild(pdfStyle);
+        }
         
         // Restore button
         downloadPdfBtn.disabled = false;
@@ -595,10 +710,17 @@ downloadPdfBtn.addEventListener('click', async () => {
         
     } catch (error) {
         console.error('Erro ao gerar PDF:', error);
+        
+        // Limpar em caso de erro
+        const pdfStyle = document.getElementById('pdf-generation-styles');
+        if (pdfStyle && pdfStyle.parentNode) {
+            document.head.removeChild(pdfStyle);
+        }
+        
         downloadPdfBtn.disabled = false;
         downloadPdfBtn.style.opacity = '1';
         downloadPdfBtn.innerHTML = '<span class="pdf-icon">📥</span><span class="pdf-text">PDF</span>';
-        showNotification('Erro ao gerar PDF. Tente novamente.', 'error');
+        showNotification('Erro ao gerar PDF: ' + error.message, 'error');
     }
 });
 
