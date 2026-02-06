@@ -120,31 +120,49 @@ const observer = new IntersectionObserver((entries) => {
 
 // Observe all animated elements - optimized
 document.addEventListener('DOMContentLoaded', () => {
+    // Check if mobile
+    const isMobile = window.innerWidth <= 768;
+    
     // Use requestIdleCallback for better performance
     const initAnimations = () => {
         const animatedElements = document.querySelectorAll(
             '.checklist-item, .arrival-card, .cost-card, .timeline-item, .tip-card, .family-tip-card, .family-transport-card, .emergency-card, .hotel-info-card, .flight-card, .first-flight-tip, .layover-card'
         );
         
-        animatedElements.forEach((el) => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-            observer.observe(el);
-        });
-        
-        // Initialize timeline items
-        const timelineItems = document.querySelectorAll('.timeline-item');
-        timelineItems.forEach(item => {
-            item.style.opacity = '0';
-            item.style.transform = 'translateY(30px)';
-        });
+        if (isMobile) {
+            // On mobile, show immediately without animation
+            animatedElements.forEach((el) => {
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+            });
+            
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach(item => {
+                item.style.opacity = '1';
+                item.style.transform = 'none';
+                item.classList.add('visible');
+            });
+        } else {
+            // Desktop: use animations
+            animatedElements.forEach((el) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                observer.observe(el);
+            });
+            
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(30px)';
+            });
+        }
     };
     
     if ('requestIdleCallback' in window) {
         requestIdleCallback(initAnimations, { timeout: 2000 });
     } else {
-        setTimeout(initAnimations, 100);
+        setTimeout(initAnimations, isMobile ? 0 : 100);
     }
 });
 
@@ -295,11 +313,21 @@ window.addEventListener('load', () => {
         setTimeout(() => loadingScreen.remove(), 500);
     }
     
-    // Animate hero elements with reduced delay
+    // Check if mobile
+    const isMobile = window.innerWidth <= 768;
+    
+    // Animate hero elements with reduced delay (or skip on mobile)
     const heroElements = document.querySelectorAll('.hero-title, .hero-subtitle, .hero-description, .hero-badges, .cta-button');
-    heroElements.forEach((el, index) => {
-        el.style.animation = `fadeInUp 0.6s ease ${index * 0.1}s both`;
-    });
+    if (isMobile) {
+        heroElements.forEach((el) => {
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+        });
+    } else {
+        heroElements.forEach((el, index) => {
+            el.style.animation = `fadeInUp 0.6s ease ${index * 0.1}s both`;
+        });
+    }
 });
 
 // Add counter animation for numbers
