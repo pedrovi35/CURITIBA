@@ -490,12 +490,20 @@ themeToggle.addEventListener('click', () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    updateThemeIcon(newTheme);
+    // Adiciona uma classe para animação suave
+    document.body.classList.add('theme-transitioning');
     
-    // Add transition effect
-    document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
+    // Pequeno delay para garantir que a classe seja aplicada
+    setTimeout(() => {
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+        
+        // Remove a classe após a transição
+        setTimeout(() => {
+            document.body.classList.remove('theme-transitioning');
+        }, 400);
+    }, 10);
 });
 
 function updateThemeIcon(theme) {
@@ -680,3 +688,111 @@ if ('ontouchstart' in window) {
 // Console message for developers
 console.log('%c🗺️ Guia de Viagem: Curitiba 2026', 'font-size: 20px; font-weight: bold; color: #2d8659;');
 console.log('%cDesenvolvido com ❤️ para uma experiência incrível!', 'font-size: 12px; color: #4a9d73;');
+
+// ========== BOTÃO VOLTAR AO TOPO ==========
+const backToTopBtn = document.getElementById('backToTop');
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        backToTopBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+    }
+});
+
+backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+// ========== CHECKLIST INTERATIVO ==========
+// Carregar checklist salvo do localStorage
+function loadChecklist() {
+    const saved = localStorage.getItem('checklist-mala');
+    if (saved) {
+        const items = JSON.parse(saved);
+        document.querySelectorAll('.checklist-checkbox').forEach((checkbox, index) => {
+            if (items[index]) {
+                checkbox.checked = true;
+            }
+        });
+    }
+}
+
+// Salvar checklist no localStorage
+function saveChecklist() {
+    const checkboxes = document.querySelectorAll('.checklist-checkbox');
+    const items = Array.from(checkboxes).map(cb => cb.checked);
+    localStorage.setItem('checklist-mala', JSON.stringify(items));
+}
+
+// Adicionar event listeners aos checkboxes
+document.addEventListener('DOMContentLoaded', () => {
+    loadChecklist();
+    
+    document.querySelectorAll('.checklist-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', saveChecklist);
+    });
+    
+    // Botão reset
+    const resetBtn = document.getElementById('resetChecklist');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            if (confirm('Deseja realmente limpar todo o checklist?')) {
+                document.querySelectorAll('.checklist-checkbox').forEach(cb => {
+                    cb.checked = false;
+                });
+                localStorage.removeItem('checklist-mala');
+                showNotification('Checklist limpo! ✅', 'success');
+            }
+        });
+    }
+});
+
+// ========== CONTADOR REGRESSIVO ==========
+function updateCountdown() {
+    // Data de chegada: 13 de fevereiro de 2026, 08:50
+    const targetDate = new Date('2026-02-13T08:50:00').getTime();
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+    
+    if (distance < 0) {
+        // Se já passou, mostra contador para o voo de volta
+        const returnDate = new Date('2026-02-18T05:00:00').getTime();
+        const returnDistance = returnDate - now;
+        
+        if (returnDistance < 0) {
+            document.getElementById('countdown-message').textContent = 'A viagem já terminou! Esperamos que tenha sido incrível! 🎉';
+            document.querySelectorAll('.countdown-number').forEach(el => el.textContent = '0');
+            return;
+        }
+        
+        const days = Math.floor(returnDistance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((returnDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((returnDistance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((returnDistance % (1000 * 60)) / 1000);
+        
+        document.getElementById('days').textContent = days;
+        document.getElementById('hours').textContent = hours;
+        document.getElementById('minutes').textContent = minutes;
+        document.getElementById('seconds').textContent = seconds;
+        document.getElementById('countdown-message').textContent = 'Faltam para o voo de volta! ✈️';
+        return;
+    }
+    
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+    document.getElementById('days').textContent = days;
+    document.getElementById('hours').textContent = hours;
+    document.getElementById('minutes').textContent = minutes;
+    document.getElementById('seconds').textContent = seconds;
+}
+
+// Atualizar contador a cada segundo
+setInterval(updateCountdown, 1000);
+updateCountdown(); // Chamar imediatamente

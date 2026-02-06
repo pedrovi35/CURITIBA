@@ -33,17 +33,22 @@
 }
 
 [data-theme="dark"] {
-    --bg-primary: #0f1419;
-    --bg-secondary: #1a1f2e;
-    --bg-tertiary: #252b3a;
-    --text-primary: #e4e6eb;
-    --text-secondary: #b0b3b8;
-    --border-color: rgba(255, 255, 255, 0.1);
-    --card-bg: #1a1f2e;
-    --header-bg: rgba(26, 31, 46, 0.95);
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.4);
-    --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.5);
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #21262d;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --border-color: rgba(255, 255, 255, 0.15);
+    --card-bg: #161b22;
+    --header-bg: rgba(22, 27, 34, 0.95);
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.6);
+    
+    /* Ajustes de gradientes para tema escuro */
+    --gradient-primary: linear-gradient(135deg, #2d8659 0%, #4a9d73 50%, #5fb88a 100%);
+    --gradient-accent: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 50%, #ffa578 100%);
+    --gradient-hero: linear-gradient(135deg, #1a3d2a 0%, #2d8659 25%, #4a9d73 75%, #5fb88a 100%);
 }
 
 body {
@@ -52,7 +57,16 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
     background: var(--bg-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Transições suaves para todos os elementos ao mudar de tema */
+* {
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Loading Screen */
@@ -155,9 +169,7 @@ body {
     transform: rotate(20deg);
 }
 
-[data-theme="dark"] .theme-icon {
-    content: '☀️';
-}
+/* O ícone do tema é controlado pelo JavaScript, não precisa de CSS aqui */
 
 .pdf-icon {
     font-size: 1.2rem;
@@ -179,6 +191,11 @@ body {
     padding: 1.2rem 0;
     transition: all 0.3s ease;
     border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .header {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.15);
 }
 
 .header.scrolled {
@@ -228,6 +245,14 @@ body {
         color: var(--primary-color);
         font-weight: 600;
     }
+
+[data-theme="dark"] .developer-credit {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .developer-credit strong {
+    color: var(--secondary-color);
+}
     
     @media (max-width: 768px) {
         .logo-container {
@@ -535,7 +560,11 @@ body {
     left: 0;
     right: 0;
     height: 100px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(248, 249, 250, 1) 100%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, var(--bg-tertiary) 100%);
+}
+
+[data-theme="dark"] .section-alt::before {
+    background: linear-gradient(180deg, rgba(13, 17, 23, 0) 0%, var(--bg-tertiary) 100%);
 }
 
 .section-title {
@@ -577,6 +606,11 @@ body {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     overflow: hidden;
+}
+
+[data-theme="dark"] .weather-card {
+    background: linear-gradient(135deg, #4a5fc7 0%, #5d3a7a 100%);
+    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
 }
 
 .weather-card::before {
@@ -642,6 +676,16 @@ body {
     overflow: hidden;
 }
 
+[data-theme="dark"] .checklist-item {
+    background: var(--card-bg);
+    border-color: rgba(45, 134, 89, 0.3);
+}
+
+[data-theme="dark"] .checklist-item:hover {
+    border-color: var(--primary-color);
+    background: rgba(45, 134, 89, 0.1);
+}
+
 .checklist-item::before {
     content: '';
     position: absolute;
@@ -696,6 +740,15 @@ body {
     border: 2px solid var(--border-color);
     position: relative;
     overflow: hidden;
+}
+
+[data-theme="dark"] .arrival-card {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .arrival-card:hover {
+    border-color: var(--primary-color);
+    background: rgba(45, 134, 89, 0.05);
 }
 
 .arrival-card::after {
@@ -792,6 +845,16 @@ body {
     border: 2px solid var(--border-color);
 }
 
+[data-theme="dark"] .transport-option {
+    background: linear-gradient(135deg, rgba(45, 134, 89, 0.1) 0%, var(--card-bg) 100%);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .transport-option:hover {
+    background: linear-gradient(135deg, rgba(45, 134, 89, 0.2) 0%, var(--card-bg) 100%);
+    border-color: var(--primary-color);
+}
+
 .transport-option:hover {
     transform: translateX(10px);
     background: linear-gradient(135deg, rgba(45, 134, 89, 0.05) 0%, rgba(74, 157, 115, 0.05) 100%);
@@ -846,6 +909,15 @@ body {
     border: 2px solid var(--border-color);
     position: relative;
     overflow: hidden;
+}
+
+[data-theme="dark"] .cost-card {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .cost-card:hover {
+    border-color: var(--primary-color);
+    background: rgba(45, 134, 89, 0.05);
 }
 
 .cost-card::before {
@@ -991,6 +1063,16 @@ body {
     border: 2px solid var(--border-color);
 }
 
+[data-theme="dark"] .timeline-content {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: var(--card-bg);
+}
+
+[data-theme="dark"] .timeline-content:hover {
+    border-color: var(--primary-color);
+    background: rgba(45, 134, 89, 0.05);
+}
+
 .timeline-content::before {
     content: '';
     position: absolute;
@@ -1045,6 +1127,14 @@ body {
     border-radius: 15px;
     border-left: 5px solid var(--primary-color);
     transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .time-slot {
+    background: linear-gradient(135deg, rgba(45, 134, 89, 0.1) 0%, var(--card-bg) 100%);
+}
+
+[data-theme="dark"] .time-slot:hover {
+    background: linear-gradient(135deg, rgba(45, 134, 89, 0.2) 0%, var(--card-bg) 100%);
 }
 
 .time-slot:hover {
@@ -1107,6 +1197,15 @@ body {
     overflow: hidden;
 }
 
+[data-theme="dark"] .tip-card {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .tip-card:hover {
+    border-color: var(--primary-color);
+    background: rgba(45, 134, 89, 0.05);
+}
+
 .tip-card::before {
     content: '';
     position: absolute;
@@ -1154,12 +1253,17 @@ body {
 
 /* Footer - Enhanced */
 .footer {
-    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--dark-bg) 100%);
+    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-primary) 100%);
     color: var(--text-primary);
     padding: 4rem 0;
     text-align: center;
     position: relative;
     overflow: hidden;
+}
+
+[data-theme="dark"] .footer {
+    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-primary) 100%);
+    border-top: 1px solid var(--border-color);
 }
 
 .footer::before {
@@ -1232,6 +1336,15 @@ body {
     box-shadow: var(--shadow-lg);
     position: relative;
     overflow: hidden;
+}
+
+[data-theme="dark"] .tab-button {
+    background: var(--card-bg);
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .tab-button:hover {
+    background: rgba(45, 134, 89, 0.1);
 }
 
 .tab-button::before {
@@ -1905,6 +2018,16 @@ body {
     border: 2px solid var(--border-color);
 }
 
+[data-theme="dark"] .flight-city {
+    background: linear-gradient(135deg, rgba(45, 134, 89, 0.1) 0%, var(--card-bg) 100%);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .flight-city:hover {
+    background: linear-gradient(135deg, rgba(45, 134, 89, 0.2) 0%, var(--card-bg) 100%);
+    border-color: var(--primary-color);
+}
+
 .flight-city:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 15px rgba(45, 134, 89, 0.15);
@@ -1951,6 +2074,14 @@ body {
     margin-top: 2rem;
     border-left: 5px solid var(--primary-color);
     transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .flight-info {
+    background: linear-gradient(135deg, rgba(45, 134, 89, 0.1) 0%, var(--card-bg) 100%);
+}
+
+[data-theme="dark"] .flight-info:hover {
+    background: linear-gradient(135deg, rgba(45, 134, 89, 0.2) 0%, var(--card-bg) 100%);
 }
 
 .flight-info:hover {
@@ -2341,9 +2472,30 @@ body {
     .emergency-grid,
     .hotel-info-grid,
     .first-flight-tips,
-    .layover-grid {
+    .layover-grid,
+    .checklist-mala-grid,
+    .useful-links-grid,
+    .payment-info-grid,
+    .transport-detail-grid,
+    .schedule-grid,
+    .food-grid,
+    .internet-grid,
+    .culture-grid,
+    .economy-grid,
+    .security-grid {
         grid-template-columns: 1fr;
         gap: 1.25rem;
+    }
+    
+    .payment-info-card,
+    .transport-detail-card,
+    .schedule-card,
+    .food-card,
+    .internet-card,
+    .culture-card,
+    .economy-card,
+    .security-card {
+        padding: 1.5rem;
     }
     
     .checklist-item,
@@ -2507,6 +2659,39 @@ body {
     .flight-arrow {
         animation: none !important;
     }
+    
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+    
+    .countdown-container {
+        gap: 1rem;
+    }
+    
+    .countdown-card {
+        min-width: 100px;
+        padding: 1.5rem 1rem;
+    }
+    
+    .countdown-number {
+        font-size: 2.5rem;
+    }
+    
+    .countdown-label {
+        font-size: 0.9rem;
+    }
+    
+    .checklist-mala-category {
+        padding: 1.5rem;
+    }
+    
+    .useful-link-card {
+        padding: 1.5rem;
+    }
 }
 
 /* Tablet specific styles */
@@ -2639,6 +2824,111 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Melhorias adicionais para tema escuro */
+[data-theme="dark"] .emergency-card {
+    border-color: rgba(231, 76, 60, 0.5);
+}
+
+[data-theme="dark"] .emergency-card:hover {
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.1);
+}
+
+[data-theme="dark"] .flight-card {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .flight-card:hover {
+    border-color: var(--primary-color);
+    background: rgba(45, 134, 89, 0.05);
+}
+
+[data-theme="dark"] .flight-card.important {
+    border-color: rgba(231, 76, 60, 0.6);
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.2) 0%, rgba(231, 76, 60, 0.15) 100%);
+}
+
+[data-theme="dark"] .hotel-info-card {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .hotel-info-card:hover {
+    border-color: var(--primary-color);
+    background: rgba(45, 134, 89, 0.05);
+}
+
+[data-theme="dark"] .family-tip-card {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .family-tip-card:hover {
+    border-color: var(--primary-color);
+    background: rgba(45, 134, 89, 0.05);
+}
+
+[data-theme="dark"] .family-transport-card {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .family-transport-card:hover {
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .layover-card {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .layover-card:hover {
+    border-color: #9c27b0;
+    background: rgba(156, 39, 176, 0.1);
+}
+
+[data-theme="dark"] .first-flight-tip {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .first-flight-tip:hover {
+    border-color: #2196f3;
+    background: rgba(33, 150, 243, 0.05);
+}
+
+/* Melhor contraste para textos no tema escuro */
+[data-theme="dark"] .arrival-header h3,
+[data-theme="dark"] .cost-card h3,
+[data-theme="dark"] .tip-card h3,
+[data-theme="dark"] .timeline-content h3,
+[data-theme="dark"] .hotel-title,
+[data-theme="dark"] .family-tip-card h4,
+[data-theme="dark"] .emergency-card h3,
+[data-theme="dark"] .flight-city strong {
+    color: var(--primary-color);
+}
+
+/* Ajuste para melhor legibilidade no tema escuro */
+[data-theme="dark"] .arrival-location,
+[data-theme="dark"] .transport-details small,
+[data-theme="dark"] .time-slot p,
+[data-theme="dark"] .tip-card p,
+[data-theme="dark"] .emergency-card p {
+    color: var(--text-secondary);
+}
+
+/* Melhor visibilidade de links e elementos interativos */
+[data-theme="dark"] .nav-link {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .nav-link:hover,
+[data-theme="dark"] .nav-link.active {
+    color: var(--secondary-color);
+}
+
+/* Scroll progress bar no tema escuro */
+[data-theme="dark"] body::before {
+    background: var(--gradient-primary);
+    box-shadow: 0 0 10px rgba(45, 134, 89, 0.5);
+}
+
 /* Scroll Progress Bar */
 body::before {
     content: '';
@@ -2652,6 +2942,862 @@ body::before {
     transition: width 0.1s ease;
 }
 
+/* ========== BOTÃO VOLTAR AO TOPO ========== */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-primary);
+    color: var(--white);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow: 0 4px 20px rgba(45, 134, 89, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 6px 30px rgba(45, 134, 89, 0.5);
+}
+
+/* ========== CHECKLIST INTERATIVO ========== */
+.checklist-mala-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.checklist-mala-category {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.checklist-mala-category:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+.checklist-mala-category h3 {
+    color: var(--primary-color);
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 700;
+}
+
+.checklist-mala-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.checklist-mala-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.checklist-mala-item:hover {
+    background: var(--bg-tertiary);
+    transform: translateX(5px);
+}
+
+.checklist-checkbox {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+.checklist-text {
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.checklist-checkbox:checked + .checklist-text {
+    color: var(--primary-color);
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+/* ========== CONTADOR REGRESSIVO ========== */
+.countdown-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 3rem;
+}
+
+.countdown-card {
+    background: var(--gradient-primary);
+    color: var(--white);
+    padding: 2.5rem 2rem;
+    border-radius: 20px;
+    text-align: center;
+    min-width: 120px;
+    box-shadow: var(--shadow-xl);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.countdown-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    animation: float 10s linear infinite;
+    opacity: 0.3;
+}
+
+.countdown-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(45, 134, 89, 0.5);
+}
+
+.countdown-number {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1;
+}
+
+.countdown-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    opacity: 0.95;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ========== LINKS ÚTEIS ========== */
+.useful-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.useful-link-card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--border-color);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.useful-link-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--gradient-primary);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.useful-link-card:hover::before {
+    transform: scaleX(1);
+}
+
+.useful-link-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+.useful-link-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+}
+
+.useful-link-card h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.useful-link-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.useful-link-list li {
+    color: var(--text-primary);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.useful-link-list li:last-child {
+    border-bottom: none;
+}
+
+.useful-link-list li:hover {
+    padding-left: 10px;
+    color: var(--primary-color);
+}
+
+.useful-link-list a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.useful-link-list a:hover {
+    border-bottom-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+[data-theme="dark"] .useful-link-card {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .useful-link-card:hover {
+    border-color: var(--primary-color);
+    background: rgba(45, 134, 89, 0.05);
+}
+
+[data-theme="dark"] .checklist-mala-category {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .checklist-mala-category:hover {
+    border-color: var(--primary-color);
+    background: rgba(45, 134, 89, 0.05);
+}
+
+/* ========== LINKS DO GOOGLE MAPS ========== */
+.map-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    background: rgba(45, 134, 89, 0.1);
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.map-link:hover {
+    background: rgba(45, 134, 89, 0.2);
+    transform: translateY(-2px);
+    color: var(--secondary-color);
+}
+
+[data-theme="dark"] .map-link {
+    background: rgba(45, 134, 89, 0.2);
+    color: var(--secondary-color);
+}
+
+[data-theme="dark"] .map-link:hover {
+    background: rgba(45, 134, 89, 0.3);
+    color: var(--primary-color);
+}
+
+/* ========== MOEDA E PAGAMENTOS ========== */
+.payment-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.payment-info-card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--border-color);
+    transition: all 0.4s ease;
+    text-align: center;
+}
+
+.payment-info-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+.payment-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+}
+
+.payment-info-card h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.payment-info-card p {
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+    font-size: 1.05rem;
+}
+
+.payment-info-card ul {
+    list-style: none;
+    text-align: left;
+    margin-top: 1rem;
+}
+
+.payment-info-card ul li {
+    padding: 0.5rem 0;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.payment-info-card ul li:last-child {
+    border-bottom: none;
+}
+
+/* ========== TRANSPORTE PÚBLICO DETALHADO ========== */
+.transport-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.transport-detail-card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--border-color);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.transport-detail-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--gradient-primary);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.transport-detail-card:hover::before {
+    transform: scaleX(1);
+}
+
+.transport-detail-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+.transport-detail-card.highlight {
+    border: 3px solid var(--primary-color);
+    background: linear-gradient(135deg, rgba(45, 134, 89, 0.1) 0%, rgba(74, 157, 115, 0.1) 100%);
+}
+
+[data-theme="dark"] .transport-detail-card.highlight {
+    background: linear-gradient(135deg, rgba(45, 134, 89, 0.2) 0%, rgba(74, 157, 115, 0.2) 100%);
+}
+
+.transport-detail-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+}
+
+.transport-detail-card h3 {
+    color: var(--primary-color);
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.transport-detail-card p {
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+    font-size: 1.05rem;
+}
+
+/* ========== HORÁRIOS E FUNCIONAMENTO ========== */
+.schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.schedule-card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--border-color);
+    transition: all 0.4s ease;
+}
+
+.schedule-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+.schedule-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+}
+
+.schedule-card h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.schedule-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.schedule-list li {
+    color: var(--text-primary);
+    padding: 0.75rem;
+    border-left: 4px solid var(--primary-color);
+    background: var(--bg-tertiary);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.schedule-list li:hover {
+    transform: translateX(5px);
+    border-left-width: 6px;
+}
+
+/* ========== COMIDAS TÍPICAS ========== */
+.food-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.food-card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--border-color);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.food-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.food-card:hover::before {
+    opacity: 1;
+    animation: float 10s linear infinite;
+}
+
+.food-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--accent-color);
+}
+
+.food-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+}
+
+.food-card h3 {
+    color: var(--primary-color);
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.food-card p {
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+    font-size: 1.05rem;
+}
+
+.food-card ul {
+    list-style: none;
+    margin-top: 1rem;
+    padding-left: 0;
+}
+
+.food-card ul li {
+    padding: 0.5rem 0;
+    color: var(--text-primary);
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.food-card ul li::before {
+    content: '🍴';
+    position: absolute;
+    left: 0;
+}
+
+/* ========== INTERNET E CONECTIVIDADE ========== */
+.internet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.internet-card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--border-color);
+    transition: all 0.4s ease;
+}
+
+.internet-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+.internet-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+}
+
+.internet-card h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.internet-card p {
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+    font-size: 1.05rem;
+}
+
+.internet-card ul {
+    list-style: none;
+    margin-top: 1rem;
+}
+
+.internet-card ul li {
+    padding: 0.5rem 0;
+    color: var(--text-primary);
+    padding-left: 1.5rem;
+    position: relative;
+    line-height: 1.6;
+}
+
+.internet-card ul li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* ========== CULTURA LOCAL ========== */
+.culture-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.culture-card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--border-color);
+    transition: all 0.4s ease;
+    text-align: center;
+}
+
+.culture-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+.culture-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+}
+
+.culture-card h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.culture-card p {
+    color: var(--text-primary);
+    line-height: 1.7;
+    font-size: 1.05rem;
+}
+
+/* ========== DICAS DE ECONOMIA ========== */
+.economy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.economy-card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--border-color);
+    transition: all 0.4s ease;
+}
+
+.economy-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+.economy-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+}
+
+.economy-card h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.economy-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.economy-card ul li {
+    color: var(--text-primary);
+    padding: 0.75rem;
+    border-left: 4px solid var(--primary-color);
+    background: var(--bg-tertiary);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.economy-card ul li:hover {
+    transform: translateX(5px);
+    border-left-width: 6px;
+}
+
+/* ========== SEGURANÇA DETALHADA ========== */
+.security-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.security-card {
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--border-color);
+    transition: all 0.4s ease;
+}
+
+.security-card.warning {
+    border: 3px solid var(--accent-color);
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 140, 90, 0.1) 100%);
+}
+
+[data-theme="dark"] .security-card.warning {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.2) 0%, rgba(255, 140, 90, 0.2) 100%);
+}
+
+.security-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+.security-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+}
+
+.security-card h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.security-card.warning h3 {
+    color: var(--accent-color);
+}
+
+.security-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.security-card ul li {
+    color: var(--text-primary);
+    padding: 0.75rem;
+    border-left: 4px solid var(--primary-color);
+    background: var(--bg-tertiary);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.security-card.warning ul li {
+    border-left-color: var(--accent-color);
+}
+
+.security-card ul li:hover {
+    transform: translateX(5px);
+    border-left-width: 6px;
+}
+
+/* Estilos para tema escuro */
+[data-theme="dark"] .payment-info-card,
+[data-theme="dark"] .transport-detail-card,
+[data-theme="dark"] .schedule-card,
+[data-theme="dark"] .food-card,
+[data-theme="dark"] .internet-card,
+[data-theme="dark"] .culture-card,
+[data-theme="dark"] .economy-card,
+[data-theme="dark"] .security-card {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .payment-info-card:hover,
+[data-theme="dark"] .transport-detail-card:hover,
+[data-theme="dark"] .schedule-card:hover,
+[data-theme="dark"] .food-card:hover,
+[data-theme="dark"] .internet-card:hover,
+[data-theme="dark"] .culture-card:hover,
+[data-theme="dark"] .economy-card:hover,
+[data-theme="dark"] .security-card:hover {
+    border-color: var(--primary-color);
+    background: rgba(45, 134, 89, 0.05);
+}
+
 /* Optimize animations - reduce motion for better performance */
 @media (prefers-reduced-motion: reduce) {
     *,
@@ -2661,4 +3807,46 @@ body::before {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+}
+
+/* Classe para transição suave de tema */
+.theme-transitioning * {
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Melhorias adicionais de contraste para acessibilidade */
+[data-theme="dark"] .section-title {
+    text-shadow: 0 2px 10px rgba(45, 134, 89, 0.3);
+}
+
+[data-theme="dark"] .logo {
+    filter: drop-shadow(0 2px 8px rgba(45, 134, 89, 0.4));
+}
+
+/* Ajustes para melhor legibilidade de textos longos no tema escuro */
+[data-theme="dark"] p,
+[data-theme="dark"] li,
+[data-theme="dark"] span {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .text-secondary,
+[data-theme="dark"] small {
+    color: var(--text-secondary);
+}
+
+/* Melhor visibilidade de bordas e divisores */
+[data-theme="dark"] .arrival-header,
+[data-theme="dark"] .cost-card h3,
+[data-theme="dark"] .flight-header {
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Ajuste para o hero section no tema escuro */
+[data-theme="dark"] .hero {
+    background: var(--gradient-hero);
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.3);
 }
