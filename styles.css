@@ -4104,6 +4104,7 @@ body::before {
 @media (max-width: 768px) {
     .quick-index {
         display: block;
+        bottom: 160px;
     }
     
     .quick-index-btn {
@@ -4173,10 +4174,81 @@ body::before {
     }
     
     .back-to-top {
-        bottom: 20px;
+        bottom: 90px;
         right: 20px;
         width: 50px;
         height: 50px;
+    }
+    
+    /* Barra de Ferramentas Mobile */
+    .mobile-tools-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--card-bg);
+        border-top: 2px solid var(--border-color);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0.75rem 0.5rem;
+        padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        /* Suporte para safe area (notch) em dispositivos modernos */
+    }
+    
+    .tool-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+        padding: 0.5rem 0.75rem;
+        text-decoration: none;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        min-width: 60px;
+        flex: 1;
+        max-width: 100px;
+    }
+    
+    .tool-item:active {
+        background: var(--bg-tertiary);
+        transform: scale(0.95);
+    }
+    
+    .tool-icon {
+        font-size: 1.5rem;
+        display: block;
+        margin-bottom: 0.15rem;
+    }
+    
+    .tool-label {
+        font-size: 0.7rem;
+        font-weight: 500;
+        text-align: center;
+        line-height: 1.2;
+    }
+    
+    .tool-item:active .tool-icon,
+    .tool-item:active .tool-label {
+        color: var(--primary-color);
+    }
+    
+    /* Ajustar padding do body para não sobrepor a barra */
+    body {
+        padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+/* Esconder barra de ferramentas em desktop */
+@media (min-width: 769px) {
+    .mobile-tools-bar {
+        display: none;
     }
 }
 
