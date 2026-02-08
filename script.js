@@ -1,4 +1,7 @@
-// Mobile Menu Toggle - Melhorado
+// ========================================
+// MOBILE MENU - OTIMIZADO PARA PERFORMANCE
+// ========================================
+
 const menuToggle = document.getElementById('menuToggle');
 const nav = document.getElementById('mainNav');
 const navOverlay = document.getElementById('navOverlay');
@@ -6,6 +9,7 @@ const body = document.body;
 
 let isMenuOpen = false;
 let scrollPosition = 0;
+let menuAnimationFrame = null;
 
 // Verificar se elementos existem antes de usar
 if (!menuToggle || !nav || !navOverlay) {
@@ -15,31 +19,40 @@ if (!menuToggle || !nav || !navOverlay) {
 function openMenu() {
     if (isMenuOpen || !nav || !menuToggle) return;
     
+    // Cancelar qualquer animação pendente
+    if (menuAnimationFrame) {
+        cancelAnimationFrame(menuAnimationFrame);
+    }
+    
     // Salvar posição do scroll
     scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
     
-    // Bloquear scroll do body
+    // Bloquear scroll do body (otimizado para mobile)
     body.classList.add('menu-open');
     body.style.top = `-${scrollPosition}px`;
     body.style.position = 'fixed';
     body.style.width = '100%';
     body.style.overflow = 'hidden';
+    body.style.touchAction = 'none';
     
-    // Abrir menu
-    nav.classList.add('active');
-    menuToggle.innerHTML = '✕';
-    menuToggle.setAttribute('aria-expanded', 'true');
-    
-    isMenuOpen = true;
-    
-    // Prevenir scroll durante animação
-    requestAnimationFrame(() => {
+    // Abrir menu com requestAnimationFrame para melhor performance
+    menuAnimationFrame = requestAnimationFrame(() => {
+        nav.classList.add('active');
+        menuToggle.innerHTML = '✕';
+        menuToggle.setAttribute('aria-expanded', 'true');
         document.documentElement.style.overflow = 'hidden';
+        isMenuOpen = true;
+        menuAnimationFrame = null;
     });
 }
 
 function closeMenu() {
     if (!isMenuOpen || !nav || !menuToggle) return;
+    
+    // Cancelar qualquer animação pendente
+    if (menuAnimationFrame) {
+        cancelAnimationFrame(menuAnimationFrame);
+    }
     
     // Fechar menu
     nav.classList.remove('active');
@@ -52,12 +65,18 @@ function closeMenu() {
     body.style.position = '';
     body.style.width = '';
     body.style.overflow = '';
+    body.style.touchAction = '';
     document.documentElement.style.overflow = '';
     
-    // Restaurar posição do scroll
-    window.scrollTo(0, scrollPosition);
-    
-    isMenuOpen = false;
+    // Restaurar posição do scroll (suave no mobile)
+    menuAnimationFrame = requestAnimationFrame(() => {
+        window.scrollTo({
+            top: scrollPosition,
+            behavior: 'auto' // Instantâneo para melhor UX
+        });
+        isMenuOpen = false;
+        menuAnimationFrame = null;
+    });
 }
 
 if (menuToggle) {
@@ -248,42 +267,60 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Intersection Observer for fade-in animations - optimized
+// ========================================
+// INTERSECTION OBSERVER - MOBILE OPTIMIZED
+// ========================================
+
+// Detectar se é mobile para otimizar animações
+const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
 const observerOptions = {
-    threshold: 0.05,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: isMobileDevice ? 0.01 : 0.05, // Menor threshold no mobile
+    rootMargin: isMobileDevice ? '0px' : '0px 0px -50px 0px' // Sem margem no mobile
 };
 
 const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-            
-            // Add visible class for timeline items
-            if (entry.target.classList.contains('timeline-item')) {
-                entry.target.classList.add('visible');
+    // Usar requestAnimationFrame para melhor performance
+    requestAnimationFrame(() => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // No mobile, mostrar imediatamente sem animação
+                if (isMobileDevice) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'none';
+                } else {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+                
+                // Add visible class for timeline items
+                if (entry.target.classList.contains('timeline-item')) {
+                    entry.target.classList.add('visible');
+                }
+                
+                // Parar de observar após aparecer (melhor performance)
+                observer.unobserve(entry.target);
             }
-        }
+        });
     });
 }, observerOptions);
 
-// Observe all animated elements - optimized
+// ========================================
+// INITIALIZE ANIMATIONS - MOBILE FIRST
+// ========================================
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if mobile
-    const isMobile = window.innerWidth <= 768;
-    
-    // Use requestIdleCallback for better performance
     const initAnimations = () => {
         const animatedElements = document.querySelectorAll(
             '.checklist-item, .arrival-card, .cost-card, .timeline-item, .tip-card, .family-tip-card, .family-transport-card, .emergency-card, .hotel-info-card, .flight-card, .first-flight-tip, .layover-card'
         );
         
-        if (isMobile) {
-            // On mobile, show immediately without animation
+        if (isMobileDevice) {
+            // Mobile: mostrar imediatamente sem animação (melhor performance)
             animatedElements.forEach((el) => {
                 el.style.opacity = '1';
                 el.style.transform = 'none';
+                el.style.transition = 'none';
             });
             
             const timelineItems = document.querySelectorAll('.timeline-item');
@@ -293,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.classList.add('visible');
             });
         } else {
-            // Desktop: use animations
+            // Desktop: usar animações suaves
             animatedElements.forEach((el) => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(20px)';
@@ -305,14 +342,17 @@ document.addEventListener('DOMContentLoaded', () => {
             timelineItems.forEach(item => {
                 item.style.opacity = '0';
                 item.style.transform = 'translateY(30px)';
+                observer.observe(item);
             });
         }
     };
     
+    // Usar requestIdleCallback se disponível, senão setTimeout
     if ('requestIdleCallback' in window) {
-        requestIdleCallback(initAnimations, { timeout: 2000 });
+        requestIdleCallback(initAnimations, { timeout: 1000 });
     } else {
-        setTimeout(initAnimations, isMobile ? 0 : 100);
+        // No mobile, executar imediatamente
+        setTimeout(initAnimations, isMobileDevice ? 0 : 100);
     }
 });
 

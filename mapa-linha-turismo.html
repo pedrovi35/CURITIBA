@@ -20,6 +20,11 @@
             crossorigin=""></script>
     
     <style>
+        body {
+            background-color: #1a1a1a;
+            color: #e6edf3;
+        }
+        
         #map {
             height: 100vh;
             width: 100%;
@@ -29,10 +34,13 @@
         .location-item {
             transition: all 0.3s ease;
             cursor: pointer;
+            background-color: #21262d;
+            border-color: #30363d;
+            color: #e6edf3;
         }
         
         .location-item:hover {
-            background-color: #f3f4f6;
+            background-color: #30363d;
             transform: translateX(5px);
         }
         
@@ -63,6 +71,7 @@
         
         .custom-popup {
             font-family: 'Poppins', sans-serif;
+            color: #2c3e50;
         }
         
         .custom-popup h3 {
@@ -106,18 +115,68 @@
             font-size: 0.875rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
+        
+        /* Marcadores especiais para hotel e aeroporto */
+        .hotel-marker {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .airport-marker {
+            background: linear-gradient(135deg, #4a90e2 0%, #6ba3e8 100%);
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Dark mode para header e sidebar */
+        header {
+            background-color: #161b22 !important;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        aside {
+            background-color: #161b22 !important;
+            border-right: 1px solid #30363d;
+        }
+        
+        h1, h2 {
+            color: #e6edf3 !important;
+        }
+        
+        p {
+            color: #8b949e !important;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50" style="background-color: #1a1a1a;">
     <!-- Header -->
-    <header class="bg-white shadow-md sticky top-0 z-50">
+    <header class="bg-white shadow-md sticky top-0 z-50" style="background-color: #161b22; border-bottom: 1px solid #30363d;">
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800">🗺️ Mapa Linha Turismo</h1>
-                    <p class="text-sm text-gray-600">24 Pontos Turísticos de Curitiba</p>
+                    <h1 class="text-2xl font-bold text-gray-800" style="color: #e6edf3;">🗺️ Mapa Linha Turismo</h1>
+                    <p class="text-sm text-gray-600" style="color: #8b949e;">24 Pontos Turísticos + Hotel + Aeroporto</p>
                 </div>
-                <a href="index.html" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                <a href="index.html" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition" style="background: linear-gradient(135deg, #2d8659 0%, #4a9d73 100%);">
                     ← Voltar
                 </a>
             </div>
@@ -127,9 +186,24 @@
     <!-- Main Container -->
     <div class="flex flex-col md:flex-row h-[calc(100vh-80px)]">
         <!-- Sidebar - Lista de Locais -->
-        <aside class="w-full md:w-96 bg-white shadow-lg overflow-y-auto z-10">
+        <aside class="w-full md:w-96 bg-white shadow-lg overflow-y-auto z-10" style="background-color: #161b22; border-right: 1px solid #30363d;">
             <div class="p-4">
-                <h2 class="text-xl font-bold text-gray-800 mb-4">📍 Pontos da Linha Turismo</h2>
+                <h2 class="text-xl font-bold text-gray-800 mb-4" style="color: #e6edf3;">📍 Pontos da Linha Turismo</h2>
+                <div class="space-y-2 mb-4">
+                    <div class="location-item p-3 rounded-lg border border-gray-200" style="background-color: #21262d; border-color: #30363d; color: #e6edf3;" data-location-id="hotel">
+                        <div class="flex items-center">
+                            <span class="location-number" style="background: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);">🏨</span>
+                            <span class="font-medium text-gray-800" style="color: #e6edf3;">Pleione Residence Flats</span>
+                        </div>
+                    </div>
+                    <div class="location-item p-3 rounded-lg border border-gray-200" style="background-color: #21262d; border-color: #30363d; color: #e6edf3;" data-location-id="airport">
+                        <div class="flex items-center">
+                            <span class="location-number" style="background: linear-gradient(135deg, #4a90e2 0%, #6ba3e8 100%);">✈️</span>
+                            <span class="font-medium text-gray-800" style="color: #e6edf3;">Aeroporto Afonso Pena</span>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="text-lg font-bold mb-2" style="color: #e6edf3; margin-top: 1.5rem;">Pontos Turísticos:</h3>
                 <div class="space-y-2" id="locationsList">
                     <!-- Lista será preenchida via JavaScript -->
                 </div>
@@ -174,11 +248,31 @@
         // Inicializar mapa
         const map = L.map('map').setView([-25.4290, -49.2671], 13);
 
-        // Adicionar tile layer (OpenStreetMap)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        // Adicionar tile layer dark mode (CartoDB Dark Matter)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
             maxZoom: 19
         }).addTo(map);
+        
+        // Coordenadas do Hotel e Aeroporto
+        const hotel = {
+            id: 'hotel',
+            name: 'Pleione Residence Flats',
+            lat: -25.4375,
+            lon: -49.2680,
+            address: 'Rua Chile, 398 - Rebouças, Curitiba - PR',
+            type: 'hotel'
+        };
+        
+        const airport = {
+            id: 'airport',
+            name: 'Aeroporto Internacional Afonso Pena (CWB)',
+            lat: -25.5283,
+            lon: -49.1758,
+            address: 'Rodovia BR-277, Km 66 - São José dos Pinhais - PR',
+            type: 'airport'
+        };
 
         // Armazenar marcadores
         const markers = [];
@@ -194,6 +288,108 @@
                 popupAnchor: [0, -20]
             });
         }
+        
+        // Criar ícone para hotel
+        function createHotelIcon() {
+            return L.divIcon({
+                className: 'hotel-marker-div',
+                html: `<div class="hotel-marker">🏨</div>`,
+                iconSize: [45, 45],
+                iconAnchor: [22.5, 22.5],
+                popupAnchor: [0, -22.5]
+            });
+        }
+        
+        // Criar ícone para aeroporto
+        function createAirportIcon() {
+            return L.divIcon({
+                className: 'airport-marker-div',
+                html: `<div class="airport-marker">✈️</div>`,
+                iconSize: [45, 45],
+                iconAnchor: [22.5, 22.5],
+                popupAnchor: [0, -22.5]
+            });
+        }
+        
+        // Adicionar marcador do hotel
+        const hotelMarker = L.marker([hotel.lat, hotel.lon], {
+            icon: createHotelIcon()
+        }).addTo(map);
+        
+        const hotelGoogleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${hotel.lat},${hotel.lon}`;
+        const hotelPopupContent = `
+            <div class="custom-popup">
+                <h3>🏨 ${hotel.name}</h3>
+                <p style="margin: 0.5rem 0; color: #6c757d;">${hotel.address}</p>
+                <a href="${hotelGoogleMapsUrl}" target="_blank" rel="noopener">
+                    📍 Ver no Google Maps →
+                </a>
+            </div>
+        `;
+        hotelMarker.bindPopup(hotelPopupContent);
+        
+        // Adicionar marcador do aeroporto
+        const airportMarker = L.marker([airport.lat, airport.lon], {
+            icon: createAirportIcon()
+        }).addTo(map);
+        
+        const airportGoogleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${airport.lat},${airport.lon}`;
+        const airportPopupContent = `
+            <div class="custom-popup">
+                <h3>✈️ ${airport.name}</h3>
+                <p style="margin: 0.5rem 0; color: #6c757d;">${airport.address}</p>
+                <p style="margin: 0.5rem 0; color: #6c757d; font-size: 0.9rem;">Código IATA: CWB</p>
+                <a href="${airportGoogleMapsUrl}" target="_blank" rel="noopener">
+                    📍 Ver no Google Maps →
+                </a>
+            </div>
+        `;
+        airportMarker.bindPopup(airportPopupContent);
+        
+        // Eventos de clique para hotel e aeroporto
+        hotelMarker.on('click', () => {
+            highlightSpecialLocation('hotel');
+        });
+        
+        airportMarker.on('click', () => {
+            highlightSpecialLocation('airport');
+        });
+        
+        // Função para destacar hotel/aeroporto na lista
+        function highlightSpecialLocation(locationId) {
+            document.querySelectorAll('.location-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const item = document.querySelector(`[data-location-id="${locationId}"]`);
+            if (item) {
+                item.classList.add('active');
+                item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+        
+        // Eventos de clique nos itens da lista para hotel e aeroporto
+        document.querySelector('[data-location-id="hotel"]').addEventListener('click', () => {
+            map.flyTo([hotel.lat, hotel.lon], 16, {
+                animate: true,
+                duration: 1.0
+            });
+            setTimeout(() => {
+                hotelMarker.openPopup();
+            }, 500);
+            highlightSpecialLocation('hotel');
+        });
+        
+        document.querySelector('[data-location-id="airport"]').addEventListener('click', () => {
+            map.flyTo([airport.lat, airport.lon], 14, {
+                animate: true,
+                duration: 1.0
+            });
+            setTimeout(() => {
+                airportMarker.openPopup();
+            }, 500);
+            highlightSpecialLocation('airport');
+        });
 
         // Adicionar marcadores ao mapa
         locations.forEach(location => {
@@ -277,6 +473,18 @@
                 item.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
+        
+        // Ajustar zoom inicial para mostrar hotel e aeroporto
+        setTimeout(() => {
+            const bounds = L.latLngBounds([
+                [hotel.lat, hotel.lon],
+                [airport.lat, airport.lon]
+            ]);
+            locations.forEach(loc => {
+                bounds.extend([loc.lat, loc.lon]);
+            });
+            map.fitBounds(bounds, { padding: [50, 50] });
+        }, 500);
 
         // Ajustar altura do mapa em mobile
         function adjustMapHeight() {
