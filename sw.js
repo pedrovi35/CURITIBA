@@ -3,6 +3,7 @@ const CACHE_NAME = 'curitiba-2026-v1';
 const urlsToCache = [
     '/',
     '/index.html',
+    '/pontos-turisticos.html',
     '/mapa-linha-turismo.html',
     '/criador-roteiro.html',
     '/clima-tempo-real.html',

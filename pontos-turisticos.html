@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📍 Pontos Turísticos de Curitiba 2026</title>
+    <meta name="description" content="Descubra os 24 principais pontos turísticos de Curitiba: Jardim Botânico, MON, Ópera de Arame e muito mais!">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+    <style>
+        .attractions-page {
+            padding: 2rem 0;
+        }
+        
+        .attractions-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .page-hero {
+            background: var(--gradient-hero);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+        
+        .page-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .page-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .search-filter {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border-color);
+        }
+        
+        .search-box {
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.7rem 1.5rem;
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .attractions-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .attractions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .attractions-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .attraction-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .attraction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .attraction-image {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .attraction-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .attraction-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 1.5rem;
+            color: white;
+        }
+        
+        .attraction-number {
+            display: inline-block;
+            background: var(--gradient-primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .attraction-title {
+            color: white;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .attraction-content {
+            padding: 2rem;
+        }
+        
+        .attraction-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .attraction-section h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .attraction-section p {
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-container">
+                <h1 class="logo">🗺️ Curitiba 2026</h1>
+                <p class="developer-credit">Desenvolvido por <strong>PEDRO VICTOR</strong></p>
+            </div>
+            <nav class="nav" id="mainNav">
+                <a href="index.html" class="nav-link">Início</a>
+                
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">📖 Guia <span class="dropdown-arrow">▼</span></a>
+                    <div class="dropdown-menu">
+                        <a href="index.html#clima" class="dropdown-item">⛅ Clima</a>
+                        <a href="index.html#chegada" class="dropdown-item">✈️ Chegada</a>
+                        <a href="index.html#voos" class="dropdown-item">🛫 Voos</a>
+                        <a href="index.html#custos" class="dropdown-item">💰 Custos</a>
+                        <a href="index.html#roteiro" class="dropdown-item">🗺️ Roteiro</a>
+                    </div>
+                </div>
+                
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">ℹ️ Informações <span class="dropdown-arrow">▼</span></a>
+                    <div class="dropdown-menu">
+                        <a href="index.html#transporte-publico" class="dropdown-item">🚌 Transporte</a>
+                        <a href="index.html#comidas-tipicas" class="dropdown-item">🍽️ Comidas</a>
+                        <a href="index.html#dicas" class="dropdown-item">💡 Dicas</a>
+                        <a href="index.html#checklist-mala" class="dropdown-item">✅ Checklist</a>
+                        <a href="index.html#links-uteis" class="dropdown-item">🔗 Links Úteis</a>
+                        <a href="index.html#emergencias" class="dropdown-item">🏥 Emergências</a>
+                    </div>
+                </div>
+                
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">🛠️ Ferramentas <span class="dropdown-arrow">▼</span></a>
+                    <div class="dropdown-menu">
+                        <a href="pontos-turisticos.html" class="dropdown-item active">📍 Pontos Turísticos</a>
+                        <a href="mapa-linha-turismo.html" class="dropdown-item">🗺️ Mapa Interativo</a>
+                        <a href="criador-roteiro.html" class="dropdown-item">✏️ Criar Roteiro</a>
+                        <a href="clima-tempo-real.html" class="dropdown-item">⛅ Clima Tempo Real</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+            </div>
+        </div>
+        <div class="nav-overlay" id="navOverlay"></div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>📍 Pontos Turísticos de Curitiba</h1>
+            <p>Descubra os 24 principais lugares para visitar na capital paranaense</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="section attractions-page">
+        <div class="attractions-container">
+            <!-- Search and Filter -->
+            <div class="search-filter">
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Buscar pontos turísticos...">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="parque">Parques</button>
+                    <button class="filter-btn" data-filter="museu">Museus</button>
+                    <button class="filter-btn" data-filter="centro">Centro</button>
+                    <button class="filter-btn" data-filter="gastronomia">Gastronomia</button>
+                </div>
+                <div id="resultsCount" style="margin-top: 1rem; color: var(--text-secondary);">Mostrando 24 pontos turísticos</div>
+            </div>
+
+            <!-- Attractions Grid -->
+            <div class="attractions-grid" id="attractionsGrid">
+                <!-- Card 1 -->
+                <article class="attraction-card" data-category="parque" data-name="Jardim Botânico">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&q=80" alt="Jardim Botânico">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">1</div>
+                            <h2 class="attraction-title">Jardim Botânico</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>O cartão-postal mais famoso da cidade, com uma icônica estufa de metal e vidro inspirada no Palácio de Cristal de Londres.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>Além da estufa, possui o Jardim das Sensações, uma trilha de 200 metros que você percorre de olhos vendados para sentir as plantas pelo tato e olfato.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que vale a visita:</h4>
+                            <p>É um lugar indispensável para fotos. Os jardins à francesa são impecáveis e transmitem uma paz única logo no início do passeio.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 2 -->
+                <article class="attraction-card" data-category="museu" data-name="Museu Oscar Niemeyer MON">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80" alt="Museu Oscar Niemeyer">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">2</div>
+                            <h2 class="attraction-title">Museu Oscar Niemeyer (MON)</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Um dos maiores museus de arte da América Latina, conhecido localmente como "Museu do Olho" devido ao seu formato arquitetônico.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>A estrutura projetada pelo próprio Oscar Niemeyer é uma obra de arte por si só. O vão livre sob o "olho" é um ponto de encontro clássico para moradores.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que vale a visita:</h4>
+                            <p>Reúne exposições de artes visuais, design e arquitetura de nível internacional. É um dos marcos culturais mais importantes do Brasil.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 3 -->
+                <article class="attraction-card" data-category="centro" data-name="Ópera de Arame">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?w=800&q=80" alt="Ópera de Arame">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">3</div>
+                            <h2 class="attraction-title">Ópera de Arame</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Um teatro construído com tubos de aço e teto de policarbonato, montado em apenas 75 dias sobre o lago de uma antiga pedreira.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>A estrutura parece flutuar sobre a água, cercada por cascatas e vegetação nativa. O acesso é feito por uma ponte de metal sobre o lago.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que vale a visita:</h4>
+                            <p>Pela integração surreal entre arquitetura industrial e natureza. Mesmo que não haja espetáculo no dia, o café no andar inferior (Vale da Música) oferece apresentações instrumentais em um palco flutuante.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 4 -->
+                <article class="attraction-card" data-category="parque" data-name="Parque Tanguá">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80" alt="Parque Tanguá">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">4</div>
+                            <h2 class="attraction-title">Parque Tanguá</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Um parque construído em uma área de pedreiras desativadas, parte do projeto de preservação da bacia do Rio Barigui.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>Possui um túnel que atravessa a rocha ligando dois lagos e um mirante a 65 metros de altura.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que vale a visita:</h4>
+                            <p>É considerado por muitos o lugar com o pôr do sol mais bonito de Curitiba. A vista do mirante para o jardim e a cascata é espetacular.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 5 -->
+                <article class="attraction-card" data-category="gastronomia" data-name="Santa Felicidade">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80" alt="Santa Felicidade">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">5</div>
+                            <h2 class="attraction-title">Santa Felicidade</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>O bairro de colonização italiana, famoso por sua gastronomia típica.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>Concentra dezenas de restaurantes enormes que servem o clássico rodízio italiano (frango, polenta, risoto e massas).</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que vale a visita:</h4>
+                            <p>É a parada ideal para o almoço. Além da comida, há vinícolas e lojas de artesanato e chocolates que preservam a cultura dos imigrantes.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 6 -->
+                <article class="attraction-card" data-category="centro" data-name="Torre Panorâmica">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1514565131-fce0801e5785?w=800&q=80" alt="Torre Panorâmica">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">6</div>
+                            <h2 class="attraction-title">Torre Panorâmica</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Uma torre de telefonia com um deck de observação.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>Oferece uma visão de 360 graus de toda a cidade a 109 metros de altura.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que vale a visita:</h4>
+                            <p>Para entender o planejamento urbano de Curitiba. Há um painel de azulejos do artista Poty Lazzarotto no mirante que narra a história da cidade.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 7 -->
+                <article class="attraction-card" data-category="parque" data-name="Bosque Alemão">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80" alt="Bosque Alemão">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">7</div>
+                            <h2 class="attraction-title">Bosque Alemão</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Um memorial dedicado aos imigrantes alemães, localizado em uma antiga chácara.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>Possui a Trilha de João e Maria, onde o conto dos irmãos Grimm é narrado em painéis ao longo de um caminho na mata, terminando na "Casa da Bruxa" (uma biblioteca infantil).</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que vale a visita:</h4>
+                            <p>Oferece o Oratório de Bach (sala de concertos) e um mirante de madeira com uma vista privilegiada da cidade. É um passeio lúdico e muito charmoso.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 8 -->
+                <article class="attraction-card" data-category="centro" data-name="Praça Rui Barbosa Rua 24 Horas">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1514565131-fce0801e5785?w=800&q=80" alt="Rua 24 Horas">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">8</div>
+                            <h2 class="attraction-title">Praça Rui Barbosa / Rua 24 Horas</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>O centro comercial e de transporte da cidade. A Rua 24 Horas é uma galeria coberta com arquitetura de arcos e relógios que marcam o tempo de forma diferente.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>A Rua 24 Horas foi a primeira do Brasil a ter esse conceito (embora hoje o comércio feche à noite). É um ótimo ponto para serviços, cafés e comprar lembranças.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>É o ponto zero da Linha. Vale para ver a arquitetura icônica e fazer um lanche rápido.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 9 -->
+                <article class="attraction-card" data-category="museu" data-name="Museu Ferroviário Shopping Estação">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80" alt="Museu Ferroviário">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">9</div>
+                            <h2 class="attraction-title">Museu Ferroviário (Shopping Estação)</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Um museu instalado dentro de um shopping que ocupa a antiga estação de trem de Curitiba.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>Você caminha por plataformas originais e vê locomotivas antigas dentro do ambiente moderno do shopping.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>É uma viagem no tempo gratuita e muito bem preservada. Ótimo para quem gosta de história ferroviária.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 10 -->
+                <article class="attraction-card" data-category="centro" data-name="Teatro Paiol">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1503095396549-807759245b35?w=800&q=80" alt="Teatro Paiol">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">10</div>
+                            <h2 class="attraction-title">Teatro Paiol</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Um antigo depósito de pólvora (construído em 1906) que foi transformado em um teatro de arena circular.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>A acústica e o formato circular proporcionam uma proximidade incrível entre o artista e o público.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>Pela curiosidade arquitetônica de ver um arsenal militar virar um centro cultural.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 11 -->
+                <article class="attraction-card" data-category="parque" data-name="Memorial Árabe Passeio Público">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?w=800&q=80" alt="Memorial Árabe">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">11</div>
+                            <h2 class="attraction-title">Memorial Árabe / Passeio Público</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Um edifício em formato de cubo inspirado em edificações mouriscas (Memorial) e o parque mais antigo da cidade (Passeio Público).</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>O Passeio Público foi o primeiro zoológico da cidade e ainda mantém algumas aves e pequenos animais, além de um aquário.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>É um refúgio de silêncio bem no centro. O Memorial Árabe é visualmente muito bonito para fotos.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 12 -->
+                <article class="attraction-card" data-category="parque" data-name="Bosque do Papa Memorial Polonês">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80" alt="Bosque do Papa">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">12</div>
+                            <h2 class="attraction-title">Bosque do Papa / Memorial Polonês</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Setes casas feitas de troncos de pinheiro (estilo polonês original) que formam um museu ao ar livre em meio a um bosque.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>Foi inaugurado logo após a visita do Papa João Paulo II em 1980.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>Para conhecer as tradições polonesas e provar o famoso Pierogi (pastel cozido típico) vendido na lojista do bosque. Fica logo atrás do Museu Oscar Niemeyer.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 13 -->
+                <article class="attraction-card" data-category="centro" data-name="Unilivre Universidade Livre do Meio Ambiente">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80" alt="Unilivre">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">13</div>
+                            <h2 class="attraction-title">Unilivre (Universidade Livre do Meio Ambiente)</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Uma instituição de ensino focada em sustentabilidade, construída com troncos de eucalipto.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>Uma rampa em espiral contorna o prédio e leva a um mirante com vista para um lago e um paredão de pedra de 15 metros.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>É um dos lugares mais "instagramáveis" e tranquilos de Curitiba. A arquitetura em madeira integrada à floresta é fascinante.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 14 -->
+                <article class="attraction-card" data-category="parque" data-name="Parque São Lourenço">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80" alt="Parque São Lourenço">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">14</div>
+                            <h2 class="attraction-title">Parque São Lourenço</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Um parque que abriga o Centro de Criatividade de Curitiba.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>Foca em artes visuais e cursos de artesanato. Possui uma pista de carrinho de rolimã oficial!</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>Se você gosta de ver artistas locais trabalhando ou quer um parque menos lotado que o Barigui.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 15 -->
+                <article class="attraction-card" data-category="parque" data-name="Parque Tingui Memorial Ucraniano">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80" alt="Parque Tingui">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">15</div>
+                            <h2 class="attraction-title">Parque Tingui / Memorial Ucraniano</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Um parque linear às margens do Rio Barigui que abriga uma réplica da igreja de São Miguel (estilo ucraniano).</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>A igreja de madeira com cúpulas douradas é uma das visões mais bonitas de Curitiba.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>Para ver a exposição de pêssankas (ovos pintados à mão) e sentir-se por um momento no leste europeu.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 16 -->
+                <article class="attraction-card" data-category="parque" data-name="Parque Barigui">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80" alt="Parque Barigui">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">16</div>
+                            <h2 class="attraction-title">Parque Barigui</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>O "Central Park" curitibano. É onde o morador da cidade vai para correr, andar de bike e ver as famosas capivaras.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>É o parque mais movimentado e possui uma infraestrutura completa, incluindo um museu do automóvel.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>Para sentir a "vibe" da cidade. Ver o pôr do sol no lago acompanhado das capivaras é uma experiência essencial.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 17 -->
+                <article class="attraction-card" data-category="centro" data-name="Setor Histórico Largo da Ordem">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1514565131-fce0801e5785?w=800&q=80" alt="Setor Histórico">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">17</div>
+                            <h2 class="attraction-title">Setor Histórico (Largo da Ordem)</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>O coração da Curitiba antiga, com calçamento de pedras irregulares e casarões coloniais.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>Abriga a Igreja da Ordem (a mais antiga da cidade) e o icônico Chafariz do Cavalo Babão.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>Se sua visita coincidir com um domingo, você verá a gigantesca Feira do Largo da Ordem. Nos outros dias, é ótimo para bares históricos e museus gratuitos.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 18 -->
+                <article class="attraction-card" data-category="centro" data-name="Praça Tiradentes Catedral">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1514565131-fce0801e5785?w=800&q=80" alt="Praça Tiradentes">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">18</div>
+                            <h2 class="attraction-title">Praça Tiradentes / Catedral</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>O marco zero da cidade. É onde Curitiba foi oficialmente fundada em 1693.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>No centro da praça, há pisos de vidro que permitem ver o calçamento original da cidade do século XIX. A Catedral Basílica, em estilo neogótico, é belíssima por dentro.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>É o coração histórico e religioso. Um ótimo ponto para observar o movimento da cidade e a arquitetura clássica.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 19 -->
+                <article class="attraction-card" data-category="centro" data-name="Paço da Liberdade">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?w=800&q=80" alt="Paço da Liberdade">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">19</div>
+                            <h2 class="attraction-title">Paço da Liberdade</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Um prédio histórico que já foi a primeira sede da Prefeitura de Curitiba.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>É o único edifício da cidade tombado pelo IPHAN nas três esferas (municipal, estadual e federal). Sua arquitetura tem detalhes em art nouveau.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>Hoje funciona como um centro cultural do SESC com um café muito charmoso. É uma das fachadas mais bonitas para fotografia.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 20 -->
+                <article class="attraction-card" data-category="centro" data-name="Rua das Flores Calçadão da XV">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1514565131-fce0801e5785?w=800&q=80" alt="Rua das Flores">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">20</div>
+                            <h2 class="attraction-title">Rua das Flores (Calçadão da XV)</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>O primeiro calçadão exclusivo para pedestres do Brasil (inaugurado em 1972).</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>É repleto de prédios históricos, canteiros de flores sazonais e o famoso "Bonde das Leituras".</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>Para caminhar sem pressa, ver os artistas de rua e sentir o pulsar do comércio central.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 21 -->
+                <article class="attraction-card" data-category="centro" data-name="Centro Cívico">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?w=800&q=80" alt="Centro Cívico">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">21</div>
+                            <h2 class="attraction-title">Centro Cívico</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>A sede dos poderes do Estado (Palácio Iguaçu, Assembleia Legislativa e Tribunal de Justiça).</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>Foi o primeiro bairro planejado do Brasil com o intuito de concentrar os prédios administrativos em um só lugar.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>Pela arquitetura modernista e pela importância política. Fica ao lado do Museu Oscar Niemeyer.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 22 -->
+                <article class="attraction-card" data-category="gastronomia" data-name="Portal Italiano">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80" alt="Portal Italiano">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">22</div>
+                            <h2 class="attraction-title">Portal Italiano</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Um pórtico de entrada que marca o início do bairro de Santa Felicidade.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>A arquitetura do portal reproduz elementos de construções típicas trazidas pelos imigrantes italianos, como os lambrequins e as torres de igrejas da Itália.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>É o sinal de que você chegou à zona gastronômica da cidade. Rende uma foto clássica de "boas-vindas".</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 23 -->
+                <article class="attraction-card" data-category="parque" data-name="Memorial Ucraniano Parque Tingui">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80" alt="Memorial Ucraniano">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">23</div>
+                            <h2 class="attraction-title">Memorial Ucraniano (dentro do Parque Tingui)</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>Um tributo ao centenário da chegada dos imigrantes ucranianos.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>A réplica da Igreja de São Miguel (feita de madeira) é um dos visuais mais impactantes do trajeto.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>Além da arquitetura, o interior abriga uma exposição permanente de Pêssankas (ovos pintados à mão com símbolos milenares).</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 24 -->
+                <article class="attraction-card" data-category="gastronomia" data-name="Rodoferroviária Mercado Municipal">
+                    <div class="attraction-image">
+                        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&q=80" alt="Mercado Municipal">
+                        <div class="attraction-overlay">
+                            <div class="attraction-number">24</div>
+                            <h2 class="attraction-title">Rodoferroviária / Mercado Municipal</h2>
+                        </div>
+                    </div>
+                    <div class="attraction-content">
+                        <div class="attraction-section">
+                            <h4>O que é:</h4>
+                            <p>O principal terminal de transportes e o maior mercado público da cidade.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Diferencial:</h4>
+                            <p>O Mercado Municipal é um paraíso para os sentidos, com especiarias, frutas exóticas e o setor de produtos orgânicos.</p>
+                        </div>
+                        <div class="attraction-section">
+                            <h4>Por que visitar:</h4>
+                            <p>É o melhor lugar para comprar queijos, vinhos e o pinhão (se estiver na época). O setor de alimentação é excelente para um almoço variado.</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Boa viagem! Aproveite essa Curitiba diferente, vazia e cheia de cultura! 🚌📸</p>
+            <p class="footer-note">Guia de Viagem: Curitiba - Carnaval 2026</p>
+            <p class="footer-credit">Desenvolvido por <strong>PEDRO VICTOR</strong></p>
+        </div>
+    </footer>
+
+    <script src="script.js" defer></script>
+    <script>
+        // Search and Filter - Código simples e direto
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const cards = document.querySelectorAll('.attraction-card');
+            const resultsCount = document.getElementById('resultsCount');
+            
+            let currentFilter = 'all';
+            let currentSearch = '';
+            
+            function filterCards() {
+                let visible = 0;
+                
+                cards.forEach(card => {
+                    const name = card.getAttribute('data-name').toLowerCase();
+                    const category = card.getAttribute('data-category');
+                    
+                    const matchSearch = currentSearch === '' || name.includes(currentSearch.toLowerCase());
+                    const matchFilter = currentFilter === 'all' || category === currentFilter;
+                    
+                    if (matchSearch && matchFilter) {
+                        card.style.display = 'block';
+                        visible++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                if (resultsCount) {
+                    resultsCount.textContent = `Mostrando ${visible} ponto${visible !== 1 ? 's' : ''} turístico${visible !== 1 ? 's' : ''}`;
+                }
+            }
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    currentSearch = e.target.value;
+                    filterCards();
+                });
+            }
+            
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.getAttribute('data-filter');
+                    filterCards();
+                });
+            });
+            
+            // Garantir que todos os cards estejam visíveis inicialmente
+            cards.forEach(card => {
+                card.style.display = 'block';
+            });
+            
+            filterCards();
+        });
+    </script>
+</body>
+</html>
+

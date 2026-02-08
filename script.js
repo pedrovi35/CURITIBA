@@ -990,6 +990,113 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// ========== ÍNDICE RÁPIDO MOBILE ==========
+const quickIndex = document.getElementById('quickIndex');
+const quickIndexBtn = document.getElementById('quickIndexBtn');
+
+if (quickIndexBtn && quickIndex) {
+    quickIndexBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        quickIndex.classList.toggle('active');
+    });
+    
+    // Fechar ao clicar fora
+    document.addEventListener('click', (e) => {
+        if (!quickIndex.contains(e.target)) {
+            quickIndex.classList.remove('active');
+        }
+    });
+    
+    // Fechar ao clicar em um item
+    const quickIndexItems = quickIndex.querySelectorAll('.quick-index-item');
+    quickIndexItems.forEach(item => {
+        item.addEventListener('click', () => {
+            quickIndex.classList.remove('active');
+            // Pequeno delay para permitir navegação
+            setTimeout(() => {
+                const hash = item.getAttribute('href');
+                if (hash.startsWith('#')) {
+                    const section = document.querySelector(hash);
+                    if (section) {
+                        const headerHeight = document.querySelector('.header').offsetHeight;
+                        const sectionTop = section.offsetTop - headerHeight - 20;
+                        window.scrollTo({
+                            top: sectionTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            }, 100);
+        });
+    });
+}
+
+// ========== ACCORDIONS PARA MOBILE ==========
+// Adicionar accordions nas seções longas para reduzir scroll no mobile
+function initMobileAccordions() {
+    const isMobile = window.innerWidth <= 768;
+    const accordionSections = [
+        'voos',
+        'transporte-publico',
+        'comidas-tipicas',
+        'horarios',
+        'cultura-local',
+        'economia',
+        'seguranca-detalhada',
+        'links-uteis',
+        'internet',
+        'moeda-pagamentos'
+    ];
+    
+    accordionSections.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (!section) return;
+        
+        // Adicionar ou remover classe accordion baseado no tamanho da tela
+        if (isMobile) {
+            section.classList.add('section-accordion');
+            section.classList.remove('accordion-open');
+        } else {
+            section.classList.remove('section-accordion');
+            section.classList.add('accordion-open'); // Sempre aberto no desktop
+        }
+        
+        const title = section.querySelector('.section-title');
+        if (!title) return;
+        
+        // Remover listeners antigos
+        const newTitle = title.cloneNode(true);
+        title.parentNode.replaceChild(newTitle, title);
+        
+        // Adicionar evento de clique no título apenas no mobile
+        if (isMobile) {
+            newTitle.addEventListener('click', () => {
+                section.classList.toggle('accordion-open');
+                
+                // Scroll suave para a seção quando abrir
+                if (section.classList.contains('accordion-open')) {
+                    setTimeout(() => {
+                        const headerHeight = document.querySelector('.header').offsetHeight;
+                        const sectionTop = section.offsetTop - headerHeight - 20;
+                        window.scrollTo({
+                            top: sectionTop,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
+                }
+            });
+        }
+    });
+}
+
+// Inicializar accordions ao carregar e ao redimensionar
+document.addEventListener('DOMContentLoaded', initMobileAccordions);
+let accordionResizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(accordionResizeTimeout);
+    accordionResizeTimeout = setTimeout(initMobileAccordions, 250);
+});
+
 // ========== CONTADOR REGRESSIVO ==========
 function updateCountdown() {
     // Data de chegada: 13 de fevereiro de 2026, 08:50
