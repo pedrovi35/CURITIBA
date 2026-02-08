@@ -4,49 +4,164 @@ const nav = document.getElementById('mainNav');
 const navOverlay = document.getElementById('navOverlay');
 const body = document.body;
 
+let isMenuOpen = false;
+let scrollPosition = 0;
+
+// Verificar se elementos existem antes de usar
+if (!menuToggle || !nav || !navOverlay) {
+    console.warn('Elementos do menu não encontrados - página pode não ter menu');
+}
+
 function openMenu() {
-    nav.classList.add('active');
+    if (isMenuOpen || !nav || !menuToggle) return;
+    
+    // Salvar posição do scroll
+    scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Bloquear scroll do body
     body.classList.add('menu-open');
+    body.style.top = `-${scrollPosition}px`;
+    body.style.position = 'fixed';
+    body.style.width = '100%';
     body.style.overflow = 'hidden';
+    
+    // Abrir menu
+    nav.classList.add('active');
     menuToggle.innerHTML = '✕';
-}
-
-function closeMenu() {
-    nav.classList.remove('active');
-    body.classList.remove('menu-open');
-    body.style.overflow = '';
-    menuToggle.innerHTML = '☰';
-}
-
-menuToggle.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (nav.classList.contains('active')) {
-        closeMenu();
-    } else {
-        openMenu();
-    }
-});
-
-// Fechar menu ao clicar no overlay
-if (navOverlay) {
-    navOverlay.addEventListener('click', () => {
-        closeMenu();
+    menuToggle.setAttribute('aria-expanded', 'true');
+    
+    isMenuOpen = true;
+    
+    // Prevenir scroll durante animação
+    requestAnimationFrame(() => {
+        document.documentElement.style.overflow = 'hidden';
     });
 }
 
-// Close menu when clicking on a link
-const navLinks = document.querySelectorAll('.nav-link');
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
+function closeMenu() {
+    if (!isMenuOpen || !nav || !menuToggle) return;
+    
+    // Fechar menu
+    nav.classList.remove('active');
+    menuToggle.innerHTML = '☰';
+    menuToggle.setAttribute('aria-expanded', 'false');
+    
+    // Restaurar scroll do body
+    body.classList.remove('menu-open');
+    body.style.top = '';
+    body.style.position = '';
+    body.style.width = '';
+    body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    
+    // Restaurar posição do scroll
+    window.scrollTo(0, scrollPosition);
+    
+    isMenuOpen = false;
+}
+
+if (menuToggle) {
+    menuToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (isMenuOpen) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+}
+
+// Fechar menu ao clicar no overlay
+if (navOverlay) {
+    navOverlay.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         closeMenu();
+    });
+    
+    // Prevenir propagação de eventos
+    navOverlay.addEventListener('touchstart', (e) => {
+        e.stopPropagation();
+    });
+}
+
+// Dropdown Menu Toggle (Mobile)
+document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+    toggle.addEventListener('click', (e) => {
+        if (window.innerWidth <= 768) {
+            e.preventDefault();
+            const dropdown = toggle.closest('.nav-dropdown');
+            dropdown.classList.toggle('active');
+        }
+    });
+});
+
+// Close menu when clicking on a link
+const navLinks = document.querySelectorAll('.nav-link:not(.dropdown-toggle)');
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Pequeno delay para permitir navegação
+        setTimeout(() => {
+            closeMenu();
+        }, 100);
+    });
+    
+    // Prevenir múltiplos cliques
+    link.addEventListener('touchstart', (e) => {
+        e.stopPropagation();
+    });
+});
+
+// Fechar dropdowns ao clicar em item do dropdown
+document.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            const dropdown = item.closest('.nav-dropdown');
+            dropdown.classList.remove('active');
+            closeMenu();
+        }
     });
 });
 
 // Fechar menu com ESC
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && nav.classList.contains('active')) {
+    if (e.key === 'Escape' && isMenuOpen) {
+        e.preventDefault();
         closeMenu();
     }
+});
+
+// Prevenir scroll quando menu está aberto
+document.addEventListener('touchmove', (e) => {
+    if (isMenuOpen) {
+        // Permitir scroll apenas dentro do menu
+        if (nav.contains(e.target) || nav === e.target) {
+            return;
+        }
+        // Bloquear scroll no resto da página
+        e.preventDefault();
+    }
+}, { passive: false });
+
+// Prevenir scroll com wheel quando menu está aberto
+document.addEventListener('wheel', (e) => {
+    if (isMenuOpen && !nav.contains(e.target)) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+// Fechar menu ao redimensionar para desktop
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        if (window.innerWidth > 768 && isMenuOpen) {
+            closeMenu();
+        }
+    }, 250);
 });
 
 // Header scroll effect - optimized
@@ -570,7 +685,8 @@ async function loadHtml2Pdf() {
 // PDF Download Function
 const downloadPdfBtn = document.getElementById('downloadPdf');
 
-downloadPdfBtn.addEventListener('click', async () => {
+if (downloadPdfBtn) {
+    downloadPdfBtn.addEventListener('click', async () => {
     try {
         // Show loading state
         downloadPdfBtn.disabled = true;
@@ -722,7 +838,8 @@ downloadPdfBtn.addEventListener('click', async () => {
         downloadPdfBtn.innerHTML = '<span class="pdf-icon">📥</span><span class="pdf-text">PDF</span>';
         showNotification('Erro ao gerar PDF: ' + error.message, 'error');
     }
-});
+    });
+}
 
 // Notification function
 function showNotification(message, type = 'success') {

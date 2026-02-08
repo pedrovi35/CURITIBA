@@ -270,7 +270,15 @@ body {
 
 .nav {
     display: flex;
-    gap: 2.5rem;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+@media (min-width: 769px) {
+    .nav {
+        gap: 1.5rem;
+    }
 }
 
 .nav-link {
@@ -281,6 +289,7 @@ body {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     padding: 0.5rem 0;
+    white-space: nowrap;
 }
 
 .nav-link::before {
@@ -305,6 +314,141 @@ body {
 .nav-link.active {
     color: var(--primary-color);
     transform: translateY(-2px);
+}
+
+/* Dropdown Menu Styles */
+.nav-dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+}
+
+.dropdown-arrow {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+}
+
+.nav-dropdown:hover .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--card-bg);
+    border-radius: 15px;
+    box-shadow: var(--shadow-xl);
+    min-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 0.5rem;
+    padding: 0.5rem 0;
+    border: 2px solid var(--border-color);
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.nav-dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.dropdown-item {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+}
+
+.dropdown-item:hover {
+    background: var(--bg-tertiary);
+    color: var(--primary-color);
+    border-left-color: var(--primary-color);
+    padding-left: 1.75rem;
+}
+
+.dropdown-item.active {
+    background: var(--bg-tertiary);
+    color: var(--primary-color);
+    border-left-color: var(--primary-color);
+    font-weight: 600;
+}
+
+.dropdown-item:first-child {
+    border-radius: 13px 13px 0 0;
+}
+
+.dropdown-item:last-child {
+    border-radius: 0 0 13px 13px;
+}
+
+/* Mobile Menu - Dropdowns */
+@media (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+        padding: 1rem 0;
+    }
+    
+    .nav-link {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .nav-dropdown {
+        width: 100%;
+    }
+    
+    .dropdown-toggle {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .dropdown-menu {
+        position: static;
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+        box-shadow: none;
+        border: none;
+        border-top: 1px solid var(--border-color);
+        margin-top: 0;
+        padding: 0;
+        background: var(--bg-tertiary);
+        border-radius: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    
+    .nav-dropdown.active .dropdown-menu {
+        max-height: 500px;
+    }
+    
+    .dropdown-item {
+        padding-left: 2.5rem;
+        border-left: none;
+    }
+    
+    .dropdown-item:hover {
+        padding-left: 2.5rem;
+        border-left: none;
+    }
 }
 
 .menu-toggle {
@@ -2232,15 +2376,25 @@ body {
     *,
     *::before,
     *::after {
-        animation-duration: 0.15s !important;
-        transition-duration: 0.15s !important;
+        animation-duration: 0.2s !important;
+        transition-duration: 0.2s !important;
     }
     
-    /* Remover hover effects no mobile */
-    *:hover {
+    /* Remover hover effects no mobile - mas manter para elementos interativos */
+    .checklist-item:hover,
+    .cost-card:hover,
+    .tip-card:hover,
+    .arrival-card:hover {
         transform: none !important;
         box-shadow: var(--shadow) !important;
-        scale: 1 !important;
+    }
+    
+    /* Manter interatividade para botões e links */
+    .cta-button:active,
+    .tab-button:active,
+    .download-pdf-btn:active,
+    .theme-toggle:active {
+        transform: scale(0.95) !important;
     }
     
     /* Simplificar gradientes no mobile */
@@ -2272,12 +2426,16 @@ body {
     
     .header {
         padding: 0.75rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
     }
 
     .header .container {
         padding: 0 1rem;
         flex-wrap: wrap;
         gap: 0.75rem;
+        position: relative;
     }
 
     .logo-container {
@@ -2299,11 +2457,13 @@ body {
         gap: 0.5rem;
         order: 2;
         flex-shrink: 0;
+        z-index: 10001;
     }
 
     .menu-toggle {
         order: 3;
         margin-left: auto;
+        z-index: 10001;
     }
     
     .download-pdf-btn .pdf-text {
@@ -2333,58 +2493,70 @@ body {
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.95);
+        background: rgba(0, 0, 0, 0.98);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         flex-direction: column;
-        padding: 5rem 1.5rem 2rem;
+        padding: 4.5rem 0 2rem;
         box-shadow: none;
         gap: 0;
         z-index: 9999;
         overflow-y: auto;
+        overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
+        transform: translateX(100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform, opacity;
     }
 
     .nav.active {
         display: flex;
-        animation: slideInFromRight 0.3s ease;
-    }
-
-    @keyframes slideInFromRight {
-        from {
-            opacity: 0;
-            transform: translateX(100%);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
+        transform: translateX(0);
+        opacity: 1;
+        visibility: visible;
     }
 
     .nav-link {
-        display: block;
+        display: flex;
+        align-items: center;
         padding: 1.25rem 1.5rem;
-        font-size: 1.2rem;
+        font-size: 1.15rem;
         font-weight: 600;
         color: var(--white) !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         text-align: left;
         width: 100%;
-        transition: all 0.3s ease;
+        transition: background-color 0.2s ease;
         position: relative;
+        min-height: 56px;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+        text-decoration: none;
     }
 
     .nav-link::before {
         display: none;
     }
 
-    .nav-link:hover,
+    .nav-link:active {
+        background: rgba(45, 134, 89, 0.5) !important;
+    }
+
     .nav-link.active {
-        background: rgba(45, 134, 89, 0.3);
+        background: rgba(45, 134, 89, 0.25);
         color: var(--white) !important;
-        transform: translateX(10px);
         border-left: 4px solid var(--primary-color);
         padding-left: calc(1.5rem - 4px);
+    }
+    
+    .nav-link:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: -2px;
     }
 
     .menu-toggle {
@@ -2393,6 +2565,14 @@ body {
         justify-content: center;
         z-index: 10000;
         position: relative;
+        min-width: 44px;
+        min-height: 44px;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .menu-toggle:active {
+        transform: scale(0.95);
     }
 
     /* Overlay para fechar menu ao clicar fora */
@@ -2403,13 +2583,17 @@ body {
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.3);
         z-index: 9998;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        will-change: opacity;
     }
 
     .nav.active ~ .nav-overlay,
     body.menu-open .nav-overlay {
         display: block;
+        opacity: 1;
     }
 
     .hero {
@@ -2904,12 +3088,35 @@ body {
     html {
         scroll-behavior: smooth;
         -webkit-overflow-scrolling: touch;
+        overflow-x: hidden;
+    }
+    
+    /* Prevenir scroll horizontal */
+    body {
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100vw;
+    }
+    
+    /* Garantir que elementos não ultrapassem a largura */
+    .container,
+    .section,
+    .hero {
+        max-width: 100vw;
+        overflow-x: hidden;
     }
 
     body.menu-open {
-        overflow: hidden;
-        position: fixed;
-        width: 100%;
+        overflow: hidden !important;
+        position: fixed !important;
+        width: 100% !important;
+        height: 100% !important;
+        touch-action: none;
+        -webkit-overflow-scrolling: none;
+    }
+    
+    body.menu-open * {
+        -webkit-tap-highlight-color: transparent;
     }
 }
 

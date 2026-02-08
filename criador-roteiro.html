@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🗺️ Criador de Roteiro Personalizado - Curitiba 2026</title>
+    <meta name="description" content="Crie seu roteiro personalizado de Curitiba. Arraste e solte pontos turísticos, calcule tempo de viagem e exporte seu roteiro!">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+    
+    <!-- SortableJS para drag and drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    
+    <!-- html2pdf para exportação -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        .route-builder-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .available-points, .route-points {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 2px solid var(--border-color);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .section-header h2 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        
+        .points-list {
+            min-height: 400px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .point-item {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            cursor: move;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .point-item:hover {
+            transform: translateX(5px);
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow);
+        }
+        
+        .point-item.sortable-ghost {
+            opacity: 0.4;
+            background: var(--bg-tertiary);
+        }
+        
+        .point-number {
+            background: var(--gradient-primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .point-info {
+            flex: 1;
+        }
+        
+        .point-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .point-time {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .route-stats {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 1.5rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+        
+        .optimize-btn {
+            background: var(--gradient-accent);
+            color: white;
+        }
+        
+        .optimize-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        @media (max-width: 768px) {
+            .route-builder-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-container">
+                <h1 class="logo">🗺️ Curitiba 2026</h1>
+                <p class="developer-credit">Desenvolvido por <strong>PEDRO VICTOR</strong></p>
+            </div>
+            <nav class="nav" id="mainNav">
+                <a href="index.html" class="nav-link">Início</a>
+                
+                <!-- Dropdown: Guia -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">📖 Guia <span class="dropdown-arrow">▼</span></a>
+                    <div class="dropdown-menu">
+                        <a href="index.html#clima" class="dropdown-item">⛅ Clima</a>
+                        <a href="index.html#chegada" class="dropdown-item">✈️ Chegada</a>
+                        <a href="index.html#voos" class="dropdown-item">🛫 Voos</a>
+                        <a href="index.html#custos" class="dropdown-item">💰 Custos</a>
+                        <a href="index.html#roteiro" class="dropdown-item">🗺️ Roteiro</a>
+                    </div>
+                </div>
+                
+                <!-- Dropdown: Informações -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">ℹ️ Informações <span class="dropdown-arrow">▼</span></a>
+                    <div class="dropdown-menu">
+                        <a href="index.html#transporte-publico" class="dropdown-item">🚌 Transporte</a>
+                        <a href="index.html#comidas-tipicas" class="dropdown-item">🍽️ Comidas</a>
+                        <a href="index.html#dicas" class="dropdown-item">💡 Dicas</a>
+                        <a href="index.html#checklist-mala" class="dropdown-item">✅ Checklist</a>
+                        <a href="index.html#links-uteis" class="dropdown-item">🔗 Links Úteis</a>
+                        <a href="index.html#emergencias" class="dropdown-item">🏥 Emergências</a>
+                    </div>
+                </div>
+                
+                <!-- Dropdown: Ferramentas -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">🛠️ Ferramentas <span class="dropdown-arrow">▼</span></a>
+                    <div class="dropdown-menu">
+                        <a href="mapa-linha-turismo.html" class="dropdown-item">🗺️ Mapa Interativo</a>
+                        <a href="criador-roteiro.html" class="dropdown-item active">✏️ Criar Roteiro</a>
+                        <a href="clima-tempo-real.html" class="dropdown-item">⛅ Clima Tempo Real</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+            </div>
+        </div>
+        <div class="nav-overlay" id="navOverlay"></div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="page-hero" style="background: var(--gradient-hero); color: white; padding: 3rem 0; text-align: center;">
+        <div class="container">
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: white;">🗺️ Criador de Roteiro Personalizado</h1>
+            <p style="font-size: 1.2rem; opacity: 0.95;">Crie seu roteiro ideal arrastando os pontos turísticos na ordem desejada</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="section">
+        <div class="container">
+            <a href="index.html" class="back-link" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--primary-color); text-decoration: none; margin-bottom: 2rem; padding: 0.8rem 1.5rem; border-radius: 12px; background: var(--bg-secondary); border: 2px solid var(--border-color);">← Voltar ao Guia Principal</a>
+
+            <div class="route-builder-container">
+                <!-- Pontos Disponíveis -->
+                <div class="available-points">
+                    <div class="section-header">
+                        <h2>📍 Pontos Disponíveis</h2>
+                        <span id="availableCount" style="background: var(--primary-color); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600;">24</span>
+                    </div>
+                    <div class="points-list" id="availablePoints">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Meu Roteiro -->
+                <div class="route-points">
+                    <div class="section-header">
+                        <h2>🗺️ Meu Roteiro</h2>
+                        <span id="routeCount" style="background: var(--accent-color); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600;">0</span>
+                    </div>
+                    <div class="points-list" id="routePoints">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📍</div>
+                            <p>Arraste pontos da lista ao lado para criar seu roteiro</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Estatísticas do Roteiro -->
+                    <div class="route-stats" id="routeStats" style="display: none;">
+                        <h3 style="margin-bottom: 1rem; text-align: center;">📊 Estatísticas do Roteiro</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalPoints">0</div>
+                                <div class="stat-label">Pontos</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalTime">0h</div>
+                                <div class="stat-label">Tempo Total</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalDistance">0 km</div>
+                                <div class="stat-label">Distância</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn optimize-btn" onclick="optimizeRoute()">⚡ Otimizar Rota</button>
+                <button class="btn btn-primary" onclick="exportPDF()">📄 Exportar PDF</button>
+                <button class="btn btn-primary" onclick="exportJSON()">💾 Exportar JSON</button>
+                <button class="btn btn-secondary" onclick="saveRoute()">💾 Salvar Roteiro</button>
+                <button class="btn btn-secondary" onclick="loadRoute()">📂 Carregar Roteiro</button>
+                <button class="btn btn-secondary" onclick="clearRoute()">🗑️ Limpar</button>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js" defer></script>
+    <script>
+        // Dados dos pontos turísticos com coordenadas
+        const touristPoints = [
+            { id: 1, name: "Rua 24 Horas", lat: -25.4285, lon: -49.2723, time: 30 },
+            { id: 2, name: "Praça Rui Barbosa", lat: -25.4288, lon: -49.2720, time: 20 },
+            { id: 3, name: "Museu Ferroviário", lat: -25.4295, lon: -49.2730, time: 45 },
+            { id: 4, name: "Teatro Paiol", lat: -25.4300, lon: -49.2680, time: 30 },
+            { id: 5, name: "Jardim Botânico", lat: -25.4420, lon: -49.2400, time: 60 },
+            { id: 6, name: "Mercado Municipal", lat: -25.4290, lon: -49.2735, time: 45 },
+            { id: 7, name: "Teatro Guaíra", lat: -25.4310, lon: -49.2710, time: 30 },
+            { id: 8, name: "Paço da Liberdade", lat: -25.4280, lon: -49.2725, time: 30 },
+            { id: 9, name: "Passeio Público", lat: -25.4270, lon: -49.2730, time: 40 },
+            { id: 10, name: "Memorial Árabe", lat: -25.4265, lon: -49.2735, time: 30 },
+            { id: 11, name: "Centro Cívico", lat: -25.4150, lon: -49.2600, time: 30 },
+            { id: 12, name: "Bosque do Papa", lat: -25.4140, lon: -49.2580, time: 45 },
+            { id: 13, name: "Museu Oscar Niemeyer", lat: -25.4130, lon: -49.2570, time: 90 },
+            { id: 14, name: "Bosque Alemão", lat: -25.4000, lon: -49.2500, time: 45 },
+            { id: 15, name: "Unilivre", lat: -25.3900, lon: -49.2450, time: 40 },
+            { id: 16, name: "Parque São Lourenço", lat: -25.4500, lon: -49.2800, time: 45 },
+            { id: 17, name: "Ópera de Arame", lat: -25.3800, lon: -49.2400, time: 45 },
+            { id: 18, name: "Parque Tanguá", lat: -25.3700, lon: -49.2300, time: 60 },
+            { id: 19, name: "Parque Tingui", lat: -25.3600, lon: -49.2200, time: 45 },
+            { id: 20, name: "Memorial Ucraniano", lat: -25.3550, lon: -49.2180, time: 30 },
+            { id: 21, name: "Santa Felicidade", lat: -25.4200, lon: -49.3000, time: 120 },
+            { id: 22, name: "Parque Barigui", lat: -25.4200, lon: -49.3100, time: 60 },
+            { id: 23, name: "Torre Panorâmica", lat: -25.4250, lon: -49.2750, time: 30 },
+            { id: 24, name: "Setor Histórico", lat: -25.4285, lon: -49.2735, time: 60 }
+        ];
+
+        let currentRoute = [];
+
+        // Inicializar listas
+        function initLists() {
+            const availableList = document.getElementById('availablePoints');
+            const routeList = document.getElementById('routePoints');
+            
+            // Limpar listas
+            availableList.innerHTML = '';
+            routeList.innerHTML = '';
+            
+            // Adicionar pontos disponíveis
+            touristPoints.forEach(point => {
+                if (!currentRoute.find(p => p.id === point.id)) {
+                    const item = createPointItem(point, false);
+                    availableList.appendChild(item);
+                }
+            });
+            
+            // Adicionar pontos do roteiro
+            if (currentRoute.length === 0) {
+                routeList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📍</div><p>Arraste pontos da lista ao lado para criar seu roteiro</p></div>';
+            } else {
+                currentRoute.forEach((point, index) => {
+                    const item = createPointItem(point, true, index + 1);
+                    routeList.appendChild(item);
+                });
+            }
+            
+            // Inicializar Sortable
+            new Sortable(availableList, {
+                group: 'shared',
+                animation: 150,
+                onEnd: updateCounts
+            });
+            
+            new Sortable(routeList, {
+                group: 'shared',
+                animation: 150,
+                onEnd: function(evt) {
+                    updateRouteOrder();
+                    updateCounts();
+                    calculateStats();
+                }
+            });
+            
+            updateCounts();
+        }
+
+        // Criar item de ponto
+        function createPointItem(point, inRoute = false, order = null) {
+            const div = document.createElement('div');
+            div.className = 'point-item';
+            div.dataset.pointId = point.id;
+            
+            const number = inRoute ? order : point.id;
+            div.innerHTML = `
+                <div class="point-number">${number}</div>
+                <div class="point-info">
+                    <div class="point-name">${point.name}</div>
+                    <div class="point-time">⏱️ ${point.time} min</div>
+                </div>
+            `;
+            
+            return div;
+        }
+
+        // Atualizar contadores
+        function updateCounts() {
+            const routeList = document.getElementById('routePoints');
+            const routeItems = routeList.querySelectorAll('.point-item');
+            const availableList = document.getElementById('availablePoints');
+            const availableItems = availableList.querySelectorAll('.point-item');
+            
+            document.getElementById('routeCount').textContent = routeItems.length;
+            document.getElementById('availableCount').textContent = availableItems.length;
+            
+            // Atualizar rota atual
+            currentRoute = Array.from(routeItems).map(item => {
+                const id = parseInt(item.dataset.pointId);
+                return touristPoints.find(p => p.id === id);
+            }).filter(Boolean);
+            
+            calculateStats();
+        }
+
+        // Atualizar ordem do roteiro
+        function updateRouteOrder() {
+            const routeList = document.getElementById('routePoints');
+            const items = routeList.querySelectorAll('.point-item');
+            items.forEach((item, index) => {
+                const numberDiv = item.querySelector('.point-number');
+                numberDiv.textContent = index + 1;
+            });
+        }
+
+        // Calcular estatísticas
+        function calculateStats() {
+            if (currentRoute.length === 0) {
+                document.getElementById('routeStats').style.display = 'none';
+                return;
+            }
+            
+            document.getElementById('routeStats').style.display = 'block';
+            document.getElementById('totalPoints').textContent = currentRoute.length;
+            
+            // Calcular tempo total
+            const totalTime = currentRoute.reduce((sum, point) => sum + point.time, 0);
+            const hours = Math.floor(totalTime / 60);
+            const minutes = totalTime % 60;
+            document.getElementById('totalTime').textContent = hours > 0 ? `${hours}h ${minutes}min` : `${minutes}min`;
+            
+            // Calcular distância total
+            let totalDistance = 0;
+            for (let i = 0; i < currentRoute.length - 1; i++) {
+                totalDistance += calculateDistance(
+                    currentRoute[i].lat, currentRoute[i].lon,
+                    currentRoute[i + 1].lat, currentRoute[i + 1].lon
+                );
+            }
+            document.getElementById('totalDistance').textContent = totalDistance.toFixed(1) + ' km';
+        }
+
+        // Calcular distância entre dois pontos (Haversine)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Raio da Terra em km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        // Otimizar rota (algoritmo simples - ordenar por proximidade)
+        function optimizeRoute() {
+            if (currentRoute.length < 2) {
+                alert('Adicione pelo menos 2 pontos para otimizar a rota!');
+                return;
+            }
+            
+            // Algoritmo de otimização simples (Nearest Neighbor)
+            const optimized = [currentRoute[0]];
+            const remaining = [...currentRoute.slice(1)];
+            
+            while (remaining.length > 0) {
+                const lastPoint = optimized[optimized.length - 1];
+                let nearestIndex = 0;
+                let nearestDistance = calculateDistance(
+                    lastPoint.lat, lastPoint.lon,
+                    remaining[0].lat, remaining[0].lon
+                );
+                
+                for (let i = 1; i < remaining.length; i++) {
+                    const dist = calculateDistance(
+                        lastPoint.lat, lastPoint.lon,
+                        remaining[i].lat, remaining[i].lon
+                    );
+                    if (dist < nearestDistance) {
+                        nearestDistance = dist;
+                        nearestIndex = i;
+                    }
+                }
+                
+                optimized.push(remaining[nearestIndex]);
+                remaining.splice(nearestIndex, 1);
+            }
+            
+            currentRoute = optimized;
+            initLists();
+            alert('Rota otimizada com sucesso! ✅');
+        }
+
+        // Exportar PDF
+        async function exportPDF() {
+            if (currentRoute.length === 0) {
+                alert('Adicione pontos ao roteiro antes de exportar!');
+                return;
+            }
+            
+            const content = generateRouteHTML();
+            const opt = {
+                margin: 10,
+                filename: 'roteiro-curitiba-2026.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            await html2pdf().set(opt).from(content).save();
+        }
+
+        // Exportar JSON
+        function exportJSON() {
+            if (currentRoute.length === 0) {
+                alert('Adicione pontos ao roteiro antes de exportar!');
+                return;
+            }
+            
+            const data = {
+                route: currentRoute.map(p => ({
+                    id: p.id,
+                    name: p.name,
+                    lat: p.lat,
+                    lon: p.lon,
+                    time: p.time
+                })),
+                createdAt: new Date().toISOString(),
+                stats: {
+                    totalPoints: currentRoute.length,
+                    totalTime: currentRoute.reduce((sum, p) => sum + p.time, 0)
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'roteiro-curitiba-2026.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Gerar HTML do roteiro
+        function generateRouteHTML() {
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <h1>Roteiro Curitiba 2026</h1>
+                <p>Gerado em: ${new Date().toLocaleString('pt-BR')}</p>
+                <ol>
+                    ${currentRoute.map((point, index) => `
+                        <li>
+                            <strong>${index + 1}. ${point.name}</strong>
+                            <br>Tempo estimado: ${point.time} minutos
+                        </li>
+                    `).join('')}
+                </ol>
+                <p><strong>Tempo total:</strong> ${Math.floor(currentRoute.reduce((sum, p) => sum + p.time, 0) / 60)}h ${currentRoute.reduce((sum, p) => sum + p.time, 0) % 60}min</p>
+            `;
+            return div;
+        }
+
+        // Salvar roteiro
+        function saveRoute() {
+            if (currentRoute.length === 0) {
+                alert('Adicione pontos ao roteiro antes de salvar!');
+                return;
+            }
+            
+            const data = {
+                route: currentRoute.map(p => p.id),
+                createdAt: new Date().toISOString()
+            };
+            
+            localStorage.setItem('savedRoute', JSON.stringify(data));
+            alert('Roteiro salvo com sucesso! ✅');
+        }
+
+        // Carregar roteiro
+        function loadRoute() {
+            const saved = localStorage.getItem('savedRoute');
+            if (!saved) {
+                alert('Nenhum roteiro salvo encontrado!');
+                return;
+            }
+            
+            const data = JSON.parse(saved);
+            currentRoute = data.route.map(id => touristPoints.find(p => p.id === id)).filter(Boolean);
+            initLists();
+            alert('Roteiro carregado com sucesso! ✅');
+        }
+
+        // Limpar roteiro
+        function clearRoute() {
+            if (confirm('Deseja realmente limpar o roteiro?')) {
+                currentRoute = [];
+                initLists();
+            }
+        }
+
+        // Inicializar ao carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            initLists();
+            
+            // Observar mudanças nas listas
+            const observer = new MutationObserver(() => {
+                updateCounts();
+            });
+            
+            observer.observe(document.getElementById('routePoints'), {
+                childList: true,
+                subtree: true
+            });
+        });
+    </script>
+</body>
+</html>
+

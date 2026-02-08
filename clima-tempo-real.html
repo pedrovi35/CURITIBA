@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⛅ Clima em Tempo Real - Curitiba 2026</title>
+    <meta name="description" content="Previsão do tempo em tempo real para Curitiba. Veja o clima atual e sugestões de pontos turísticos baseadas no tempo!">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛅</text></svg>">
+    
+    <style>
+        .weather-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .current-weather {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 3rem;
+            border-radius: 25px;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .weather-icon-large {
+            font-size: 6rem;
+            margin-bottom: 1rem;
+        }
+        
+        .temperature {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .weather-description {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.95;
+        }
+        
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .detail-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .detail-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .forecast-section {
+            margin-top: 3rem;
+        }
+        
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .forecast-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .forecast-date {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .forecast-icon {
+            font-size: 3rem;
+            margin: 1rem 0;
+        }
+        
+        .forecast-temp {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .suggestions-section {
+            margin-top: 3rem;
+        }
+        
+        .suggestion-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .suggestion-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        
+        .error {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        /* Previsão Horária */
+        .hourly-section {
+            margin-top: 3rem;
+        }
+        
+        .hourly-container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border-color);
+            overflow-x: auto;
+        }
+        
+        .hourly-scroll {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            min-width: max-content;
+        }
+        
+        .hourly-item {
+            min-width: 100px;
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .hourly-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary-color);
+        }
+        
+        .hourly-item.rain-highlight {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border-color: #3b82f6;
+            border-width: 3px;
+        }
+        
+        .hourly-time {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .hourly-icon {
+            font-size: 2rem;
+            margin: 0.5rem 0;
+        }
+        
+        .hourly-temp {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+        
+        .hourly-rain {
+            font-size: 0.8rem;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        
+        .hourly-rain.high {
+            color: #1e40af;
+            font-weight: 700;
+        }
+        
+        /* Alerta de Chuva */
+        .rain-alert {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(30, 64, 175, 0.1) 100%);
+            border: 3px solid #3b82f6;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .rain-alert-icon {
+            font-size: 3rem;
+            flex-shrink: 0;
+        }
+        
+        .rain-alert-content {
+            flex: 1;
+        }
+        
+        .rain-alert-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+        
+        .rain-alert-text {
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .rain-alert-time {
+            font-weight: 600;
+            color: #1e40af;
+        }
+        
+        /* Timeline do Dia */
+        .day-timeline {
+            margin-top: 2rem;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border-color);
+        }
+        
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .timeline-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .timeline-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+        
+        .timeline-period {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+        }
+        
+        .timeline-period.rain-period {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%);
+            border-color: #3b82f6;
+        }
+        
+        .period-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .period-icon {
+            font-size: 2rem;
+            margin: 0.5rem 0;
+        }
+        
+        .period-temp {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .period-rain {
+            font-size: 0.75rem;
+            color: #3b82f6;
+            margin-top: 0.3rem;
+            font-weight: 600;
+        }
+        
+        /* Indicador de Clima Cebola */
+        .onion-weather-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 152, 0, 0.1) 100%);
+            border: 2px solid #ff9800;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            margin-top: 1rem;
+            font-weight: 600;
+            color: #e65100;
+        }
+        
+        .onion-icon {
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-container">
+                <h1 class="logo">🗺️ Curitiba 2026</h1>
+                <p class="developer-credit">Desenvolvido por <strong>PEDRO VICTOR</strong></p>
+            </div>
+            <nav class="nav" id="mainNav">
+                <a href="index.html" class="nav-link">Início</a>
+                
+                <!-- Dropdown: Guia -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">📖 Guia <span class="dropdown-arrow">▼</span></a>
+                    <div class="dropdown-menu">
+                        <a href="index.html#clima" class="dropdown-item">⛅ Clima</a>
+                        <a href="index.html#chegada" class="dropdown-item">✈️ Chegada</a>
+                        <a href="index.html#voos" class="dropdown-item">🛫 Voos</a>
+                        <a href="index.html#custos" class="dropdown-item">💰 Custos</a>
+                        <a href="index.html#roteiro" class="dropdown-item">🗺️ Roteiro</a>
+                    </div>
+                </div>
+                
+                <!-- Dropdown: Informações -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">ℹ️ Informações <span class="dropdown-arrow">▼</span></a>
+                    <div class="dropdown-menu">
+                        <a href="index.html#transporte-publico" class="dropdown-item">🚌 Transporte</a>
+                        <a href="index.html#comidas-tipicas" class="dropdown-item">🍽️ Comidas</a>
+                        <a href="index.html#dicas" class="dropdown-item">💡 Dicas</a>
+                        <a href="index.html#checklist-mala" class="dropdown-item">✅ Checklist</a>
+                        <a href="index.html#links-uteis" class="dropdown-item">🔗 Links Úteis</a>
+                        <a href="index.html#emergencias" class="dropdown-item">🏥 Emergências</a>
+                    </div>
+                </div>
+                
+                <!-- Dropdown: Ferramentas -->
+                <div class="nav-dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">🛠️ Ferramentas <span class="dropdown-arrow">▼</span></a>
+                    <div class="dropdown-menu">
+                        <a href="mapa-linha-turismo.html" class="dropdown-item">🗺️ Mapa Interativo</a>
+                        <a href="criador-roteiro.html" class="dropdown-item">✏️ Criar Roteiro</a>
+                        <a href="clima-tempo-real.html" class="dropdown-item active">⛅ Clima Tempo Real</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+            </div>
+        </div>
+        <div class="nav-overlay" id="navOverlay"></div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="page-hero" style="background: var(--gradient-hero); color: white; padding: 3rem 0; text-align: center;">
+        <div class="container">
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: white;">⛅ Clima em Tempo Real</h1>
+            <p style="font-size: 1.2rem; opacity: 0.95;">Previsão do tempo para Curitiba e sugestões de pontos turísticos</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="section">
+        <div class="container">
+            <a href="index.html" class="back-link" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--primary-color); text-decoration: none; margin-bottom: 2rem; padding: 0.8rem 1.5rem; border-radius: 12px; background: var(--bg-secondary); border: 2px solid var(--border-color);">← Voltar ao Guia Principal</a>
+
+            <div class="weather-container">
+                <!-- Clima Atual -->
+                <div id="currentWeather" class="current-weather" style="display: none;">
+                    <div class="weather-icon-large" id="weatherIcon">⛅</div>
+                    <div class="temperature" id="temperature">--°C</div>
+                    <div class="weather-description" id="weatherDescription">Carregando...</div>
+                    <div class="weather-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Sensação Térmica</div>
+                            <div class="detail-value" id="feelsLike">--°C</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Umidade</div>
+                            <div class="detail-value" id="humidity">--%</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Vento</div>
+                            <div class="detail-value" id="windSpeed">-- km/h</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Pressão</div>
+                            <div class="detail-value" id="pressure">-- hPa</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="loading" class="loading">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">⏳</div>
+                    <p>Carregando dados do clima...</p>
+                </div>
+
+                <div id="error" class="error" style="display: none;">
+                    <p>⚠️ Não foi possível carregar os dados do clima. Verifique sua conexão ou tente novamente mais tarde.</p>
+                    <button onclick="loadWeather()" style="margin-top: 1rem; padding: 0.8rem 1.5rem; background: var(--primary-color); color: white; border: none; border-radius: 10px; cursor: pointer;">Tentar Novamente</button>
+                </div>
+
+                <!-- Alerta de Chuva -->
+                <div id="rainAlert" style="display: none;"></div>
+                
+                <!-- Timeline do Dia -->
+                <div class="day-timeline" id="dayTimeline" style="display: none;">
+                    <div class="timeline-header">
+                        <div>
+                            <div class="timeline-title">🌤️ Clima ao Longo do Dia</div>
+                            <div class="timeline-subtitle">Previsão horária para as próximas 24 horas</div>
+                        </div>
+                        <div class="onion-weather-badge">
+                            <span class="onion-icon">🧅</span>
+                            <span>Clima Cebola de Curitiba</span>
+                        </div>
+                    </div>
+                    <div class="timeline-grid" id="timelineGrid">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Previsão Horária (Scroll) -->
+                <div class="hourly-section" id="hourlySection" style="display: none;">
+                    <h2 class="section-title">⏰ Previsão Horária Detalhada</h2>
+                    <div class="hourly-container">
+                        <div class="hourly-scroll" id="hourlyScroll">
+                            <!-- Será preenchido via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Previsão -->
+                <div class="forecast-section" id="forecastSection" style="display: none;">
+                    <h2 class="section-title">📅 Previsão para os Próximos 5 Dias</h2>
+                    <div class="forecast-grid" id="forecastGrid">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Sugestões -->
+                <div class="suggestions-section" id="suggestionsSection" style="display: none;">
+                    <h2 class="section-title">💡 Sugestões Baseadas no Clima</h2>
+                    <div id="suggestionsList">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js" defer></script>
+    <script>
+        // API Key do OpenWeatherMap (use sua própria chave - gratuita em openweathermap.org)
+        // Para demonstração, usando uma chave pública (pode ter limitações)
+        const API_KEY = 'demo_key'; // Substitua pela sua chave
+        const CITY = 'Curitiba,BR';
+        const LAT = -25.4290;
+        const LON = -49.2671;
+
+        // Mapeamento de condições climáticas para emojis
+        const weatherIcons = {
+            'clear': '☀️',
+            'clouds': '☁️',
+            'rain': '🌧️',
+            'drizzle': '🌦️',
+            'thunderstorm': '⛈️',
+            'snow': '❄️',
+            'mist': '🌫️',
+            'fog': '🌫️'
+        };
+
+        // Sugestões baseadas no clima
+        const weatherSuggestions = {
+            'sunny': [
+                { title: 'Parques ao Ar Livre', points: ['Jardim Botânico', 'Parque Tanguá', 'Parque Barigui', 'Ópera de Arame'], icon: '🌳' },
+                { title: 'Atividades Externas', points: ['Torre Panorâmica', 'Parque Tingui', 'Unilivre'], icon: '🏞️' }
+            ],
+            'rainy': [
+                { title: 'Atrações Cobertas', points: ['Museu Oscar Niemeyer', 'Museu Ferroviário', 'Teatro Guaíra', 'Paço da Liberdade'], icon: '🏛️' },
+                { title: 'Gastronomia', points: ['Mercado Municipal', 'Santa Felicidade', 'Rua 24 Horas'], icon: '🍽️' }
+            ],
+            'cloudy': [
+                { title: 'Passeios Curtos', points: ['Centro Histórico', 'Setor Histórico', 'Praça Tiradentes'], icon: '🏛️' },
+                { title: 'Museus e Cultura', points: ['MON', 'Memorial Árabe', 'Bosque do Papa'], icon: '🎭' }
+            ]
+        };
+
+        async function loadWeather() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('currentWeather').style.display = 'none';
+            document.getElementById('rainAlert').style.display = 'none';
+            document.getElementById('dayTimeline').style.display = 'none';
+            document.getElementById('hourlySection').style.display = 'none';
+            document.getElementById('forecastSection').style.display = 'none';
+            document.getElementById('suggestionsSection').style.display = 'none';
+
+            try {
+                // Usando API gratuita alternativa (Open-Meteo) que não requer chave
+                const currentUrl = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,pressure_msl&timezone=America/Sao_Paulo`;
+                const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=America/Sao_Paulo&forecast_days=5`;
+                const hourlyUrl = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&hourly=temperature_2m,weather_code,precipitation_probability,precipitation&timezone=America/Sao_Paulo&forecast_days=2`;
+
+                const [currentResponse, forecastResponse, hourlyResponse] = await Promise.all([
+                    fetch(currentUrl),
+                    fetch(forecastUrl),
+                    fetch(hourlyUrl)
+                ]);
+
+                if (!currentResponse.ok || !forecastResponse.ok || !hourlyResponse.ok) {
+                    throw new Error('Erro ao buscar dados');
+                }
+
+                const currentData = await currentResponse.json();
+                const forecastData = await forecastResponse.json();
+                const hourlyData = await hourlyResponse.json();
+
+                // Verificar se os dados estão corretos
+                if (!currentData || !currentData.current) {
+                    throw new Error('Dados atuais não disponíveis');
+                }
+                if (!forecastData || !forecastData.daily) {
+                    throw new Error('Previsão diária não disponível');
+                }
+                if (!hourlyData || !hourlyData.hourly) {
+                    throw new Error('Previsão horária não disponível');
+                }
+
+                // Exibir clima atual
+                try {
+                    displayCurrentWeather(currentData);
+                } catch (e) {
+                    console.error('Erro ao exibir clima atual:', e);
+                }
+                
+                // Exibir previsão horária
+                try {
+                    displayHourlyForecast(hourlyData);
+                } catch (e) {
+                    console.error('Erro ao exibir previsão horária:', e);
+                }
+                
+                // Exibir timeline do dia
+                try {
+                    displayDayTimeline(hourlyData);
+                } catch (e) {
+                    console.error('Erro ao exibir timeline:', e);
+                }
+                
+                // Verificar e exibir alertas de chuva
+                try {
+                    checkRainAlerts(hourlyData);
+                } catch (e) {
+                    console.error('Erro ao verificar alertas:', e);
+                }
+                
+                // Exibir previsão
+                try {
+                    displayForecast(forecastData);
+                } catch (e) {
+                    console.error('Erro ao exibir previsão:', e);
+                }
+                
+                // Exibir sugestões
+                try {
+                    displaySuggestions(currentData);
+                } catch (e) {
+                    console.error('Erro ao exibir sugestões:', e);
+                }
+
+                document.getElementById('loading').style.display = 'none';
+            } catch (error) {
+                console.error('Erro ao carregar clima:', error);
+                document.getElementById('loading').style.display = 'none';
+                const errorDiv = document.getElementById('error');
+                if (errorDiv) {
+                    errorDiv.innerHTML = `
+                        <p>⚠️ Não foi possível carregar os dados do clima.</p>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">Erro: ${error.message}</p>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.7;">Verifique sua conexão ou tente novamente mais tarde.</p>
+                        <button onclick="loadWeather()" style="margin-top: 1rem; padding: 0.8rem 1.5rem; background: var(--primary-color); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600;">🔄 Tentar Novamente</button>
+                    `;
+                    errorDiv.style.display = 'block';
+                }
+            }
+        }
+
+        function displayCurrentWeather(data) {
+            const current = data.current;
+            const temp = Math.round(current.temperature_2m);
+            const weatherCode = current.weather_code;
+            
+            const icon = getWeatherIcon(weatherCode);
+
+            document.getElementById('weatherIcon').textContent = icon;
+            document.getElementById('temperature').textContent = `${temp}°C`;
+            document.getElementById('weatherDescription').textContent = getWeatherDescription(weatherCode);
+            document.getElementById('feelsLike').textContent = `${temp}°C`;
+            document.getElementById('humidity').textContent = `${current.relative_humidity_2m}%`;
+            document.getElementById('windSpeed').textContent = `${Math.round(current.wind_speed_10m)} km/h`;
+            document.getElementById('pressure').textContent = `${Math.round(current.pressure_msl)} hPa`;
+
+            document.getElementById('currentWeather').style.display = 'block';
+        }
+
+        function displayForecast(data) {
+            const forecast = data.daily;
+            const grid = document.getElementById('forecastGrid');
+            grid.innerHTML = '';
+
+            for (let i = 0; i < 5; i++) {
+                const date = new Date(forecast.time[i]);
+                const dayName = date.toLocaleDateString('pt-BR', { weekday: 'short' });
+                const dayNum = date.getDate();
+                const maxTemp = Math.round(forecast.temperature_2m_max[i]);
+                const minTemp = Math.round(forecast.temperature_2m_min[i]);
+                const weatherCode = forecast.weather_code[i];
+
+                const icon = getWeatherIcon(weatherCode);
+
+                const card = document.createElement('div');
+                card.className = 'forecast-card';
+                card.innerHTML = `
+                    <div class="forecast-date">${dayName}, ${dayNum}</div>
+                    <div class="forecast-icon">${icon}</div>
+                    <div class="forecast-temp">${maxTemp}° / ${minTemp}°</div>
+                `;
+                grid.appendChild(card);
+            }
+
+            document.getElementById('forecastSection').style.display = 'block';
+        }
+
+        function displaySuggestions(data) {
+            const current = data.current;
+            const weatherCode = current.weather_code;
+            const suggestionsList = document.getElementById('suggestionsList');
+            suggestionsList.innerHTML = '';
+
+            let suggestions;
+            if (weatherCode < 3) {
+                suggestions = weatherSuggestions.sunny;
+            } else if (weatherCode >= 50 && weatherCode < 70) {
+                suggestions = weatherSuggestions.rainy;
+            } else {
+                suggestions = weatherSuggestions.cloudy;
+            }
+
+            suggestions.forEach(suggestion => {
+                const card = document.createElement('div');
+                card.className = 'suggestion-card';
+                card.innerHTML = `
+                    <div class="suggestion-title">${suggestion.icon} ${suggestion.title}</div>
+                    <p>Recomendamos visitar: ${suggestion.points.join(', ')}</p>
+                `;
+                suggestionsList.appendChild(card);
+            });
+
+            document.getElementById('suggestionsSection').style.display = 'block';
+        }
+
+        function getWeatherDescription(code) {
+            if (code < 3) return 'Céu Limpo';
+            if (code < 50) return 'Nublado';
+            if (code < 70) return 'Chuvoso';
+            if (code < 80) return 'Tempestade';
+            return 'Neve';
+        }
+
+        function getWeatherIcon(code) {
+            if (code < 3) return '☀️';
+            else if (code < 50) return '☁️';
+            else if (code < 70) return '🌧️';
+            else if (code < 80) return '⛈️';
+            else return '❄️';
+        }
+
+        function displayHourlyForecast(data) {
+            if (!data || !data.hourly || !data.hourly.time) {
+                console.error('Dados horários não disponíveis');
+                return;
+            }
+
+            const hourly = data.hourly;
+            const scroll = document.getElementById('hourlyScroll');
+            if (!scroll) return;
+            
+            scroll.innerHTML = '';
+
+            const now = new Date();
+            const currentTime = now.getTime();
+
+            // Encontrar o índice da hora atual ou próxima
+            let startIndex = 0;
+            for (let i = 0; i < hourly.time.length; i++) {
+                const time = new Date(hourly.time[i]);
+                if (time.getTime() >= currentTime) {
+                    startIndex = i;
+                    break;
+                }
+            }
+
+            // Mostrar próximas 24 horas
+            for (let i = 0; i < 24 && (startIndex + i) < hourly.time.length; i++) {
+                const index = startIndex + i;
+                const time = new Date(hourly.time[index]);
+                const hour = time.getHours();
+                const temp = Math.round(hourly.temperature_2m[index]);
+                const weatherCode = hourly.weather_code[index];
+                const rainProb = hourly.precipitation_probability ? (hourly.precipitation_probability[index] || 0) : 0;
+                const precipitation = hourly.precipitation ? (hourly.precipitation[index] || 0) : 0;
+
+                const item = document.createElement('div');
+                item.className = 'hourly-item';
+                if (rainProb > 50 || precipitation > 0.5) {
+                    item.classList.add('rain-highlight');
+                }
+
+                const timeStr = hour.toString().padStart(2, '0') + ':00';
+                const icon = getWeatherIcon(weatherCode);
+                
+                item.innerHTML = `
+                    <div class="hourly-time">${timeStr}</div>
+                    <div class="hourly-icon">${icon}</div>
+                    <div class="hourly-temp">${temp}°C</div>
+                    ${rainProb > 0 ? `<div class="hourly-rain ${rainProb > 70 ? 'high' : ''}">💧 ${rainProb}%</div>` : ''}
+                `;
+
+                scroll.appendChild(item);
+            }
+
+            document.getElementById('hourlySection').style.display = 'block';
+        }
+
+        function displayDayTimeline(data) {
+            if (!data || !data.hourly || !data.hourly.time) {
+                console.error('Dados horários não disponíveis');
+                return;
+            }
+
+            const hourly = data.hourly;
+            const grid = document.getElementById('timelineGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+
+            const now = new Date();
+            const currentHour = now.getHours();
+
+            // Dividir o dia em períodos: Manhã (6-12), Tarde (12-18), Noite (18-24), Madrugada (0-6)
+            const periods = [
+                { name: 'Madrugada', start: 0, end: 6, icon: '🌙' },
+                { name: 'Manhã', start: 6, end: 12, icon: '🌅' },
+                { name: 'Tarde', start: 12, end: 18, icon: '☀️' },
+                { name: 'Noite', start: 18, end: 24, icon: '🌆' }
+            ];
+
+            periods.forEach(period => {
+                let temps = [];
+                let rainProbs = [];
+                let weatherCodes = [];
+                let hasRain = false;
+
+                // Encontrar índices no array que correspondem às horas do período
+                for (let i = 0; i < hourly.time.length; i++) {
+                    const time = new Date(hourly.time[i]);
+                    const hour = time.getHours();
+                    
+                    // Verificar se esta hora pertence ao período
+                    let inPeriod = false;
+                    if (period.start < period.end) {
+                        inPeriod = hour >= period.start && hour < period.end;
+                    } else {
+                        // Para madrugada (0-6), pode cruzar meia-noite
+                        inPeriod = hour >= period.start || hour < period.end;
+                    }
+
+                    if (inPeriod) {
+                        temps.push(hourly.temperature_2m[i]);
+                        rainProbs.push(hourly.precipitation_probability[i] || 0);
+                        weatherCodes.push(hourly.weather_code[i]);
+                        if ((hourly.precipitation_probability[i] || 0) > 50 || (hourly.precipitation[i] || 0) > 0.5) {
+                            hasRain = true;
+                        }
+                    }
+                }
+
+                if (temps.length === 0) return;
+
+                const avgTemp = Math.round(temps.reduce((a, b) => a + b, 0) / temps.length);
+                const maxRainProb = Math.max(...rainProbs);
+                const dominantCode = weatherCodes[Math.floor(weatherCodes.length / 2)];
+                const icon = getWeatherIcon(dominantCode);
+
+                const periodDiv = document.createElement('div');
+                periodDiv.className = 'timeline-period';
+                if (hasRain || maxRainProb > 50) {
+                    periodDiv.classList.add('rain-period');
+                }
+
+                periodDiv.innerHTML = `
+                    <div class="period-label">${period.icon} ${period.name}</div>
+                    <div class="period-icon">${icon}</div>
+                    <div class="period-temp">${avgTemp}°C</div>
+                    ${maxRainProb > 0 ? `<div class="period-rain">💧 ${maxRainProb}% chuva</div>` : '<div class="period-rain" style="opacity: 0.3;">Sem chuva</div>'}
+                `;
+
+                grid.appendChild(periodDiv);
+            });
+
+            document.getElementById('dayTimeline').style.display = 'block';
+        }
+
+        function checkRainAlerts(data) {
+            if (!data || !data.hourly || !data.hourly.time) {
+                return;
+            }
+
+            const hourly = data.hourly;
+            const now = new Date();
+            const currentTime = now.getTime();
+
+            // Encontrar o índice da hora atual ou próxima
+            let startIndex = 0;
+            for (let i = 0; i < hourly.time.length; i++) {
+                const time = new Date(hourly.time[i]);
+                if (time.getTime() >= currentTime) {
+                    startIndex = i;
+                    break;
+                }
+            }
+
+            // Verificar próximas 12 horas para alertas de chuva
+            let rainAlerts = [];
+            for (let i = 0; i < 12 && (startIndex + i) < hourly.time.length; i++) {
+                const index = startIndex + i;
+                const time = new Date(hourly.time[index]);
+                const rainProb = hourly.precipitation_probability ? (hourly.precipitation_probability[index] || 0) : 0;
+                const precipitation = hourly.precipitation ? (hourly.precipitation[index] || 0) : 0;
+
+                if (rainProb > 60 || precipitation > 1.0) {
+                    rainAlerts.push({
+                        time: time,
+                        rainProb: rainProb,
+                        precipitation: precipitation
+                    });
+                }
+            }
+
+            const alertDiv = document.getElementById('rainAlert');
+            if (!alertDiv) return;
+
+            if (rainAlerts.length > 0) {
+                const firstAlert = rainAlerts[0];
+                const timeStr = firstAlert.time.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                const intensity = firstAlert.rainProb > 80 || firstAlert.precipitation > 2.0 ? 'forte' : 'moderada';
+
+                alertDiv.innerHTML = `
+                    <div class="rain-alert">
+                        <div class="rain-alert-icon">🌧️</div>
+                        <div class="rain-alert-content">
+                            <div class="rain-alert-title">⚠️ Alerta de Chuva!</div>
+                            <div class="rain-alert-text">
+                                Previsão de chuva ${intensity} às <span class="rain-alert-time">${timeStr}</span>.
+                                ${rainAlerts.length > 1 ? `Mais ${rainAlerts.length - 1} períodos de chuva nas próximas horas.` : ''}
+                                <br><strong>💡 Dica:</strong> Leve guarda-chuva e prefira atrações cobertas!
+                            </div>
+                        </div>
+                    </div>
+                `;
+                alertDiv.style.display = 'block';
+            } else {
+                alertDiv.style.display = 'none';
+            }
+        }
+
+        // Carregar clima ao iniciar
+        document.addEventListener('DOMContentLoaded', loadWeather);
+        
+        // Atualizar a cada 30 minutos
+        setInterval(loadWeather, 30 * 60 * 1000);
+    </script>
+</body>
+</html>
+

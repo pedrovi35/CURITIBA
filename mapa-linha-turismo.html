@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🗺️ Mapa Interativo - Linha Turismo Curitiba | 24 Pontos Turísticos</title>
+    <meta name="description" content="Mapa interativo com os 24 pontos da Linha Turismo de Curitiba. Explore os principais pontos turísticos da cidade!">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    
+    <style>
+        #map {
+            height: 100vh;
+            width: 100%;
+            z-index: 1;
+        }
+        
+        .location-item {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .location-item:hover {
+            background-color: #f3f4f6;
+            transform: translateX(5px);
+        }
+        
+        .location-item.active {
+            background-color: #2d8659;
+            color: white;
+        }
+        
+        .location-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2d8659 0%, #4a9d73 100%);
+            color: white;
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+        
+        .location-item.active .location-number {
+            background: white;
+            color: #2d8659;
+        }
+        
+        .custom-popup {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .custom-popup h3 {
+            font-weight: 700;
+            color: #2d8659;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .custom-popup a {
+            color: #4a9d73;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .custom-popup a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            #map {
+                height: 60vh;
+            }
+        }
+        
+        /* Custom marker styles */
+        .custom-marker {
+            background: linear-gradient(135deg, #2d8659 0%, #4a9d73 100%);
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">🗺️ Mapa Linha Turismo</h1>
+                    <p class="text-sm text-gray-600">24 Pontos Turísticos de Curitiba</p>
+                </div>
+                <a href="index.html" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                    ← Voltar
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex flex-col md:flex-row h-[calc(100vh-80px)]">
+        <!-- Sidebar - Lista de Locais -->
+        <aside class="w-full md:w-96 bg-white shadow-lg overflow-y-auto z-10">
+            <div class="p-4">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">📍 Pontos da Linha Turismo</h2>
+                <div class="space-y-2" id="locationsList">
+                    <!-- Lista será preenchida via JavaScript -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Mapa -->
+        <div class="flex-1 relative">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <script>
+        // Coordenadas dos pontos turísticos (coordenadas mais precisas de Curitiba)
+        const locations = [
+            { id: 1, name: "Rua 24 Horas", lat: -25.4285, lon: -49.2723 },
+            { id: 2, name: "Praça Rui Barbosa", lat: -25.4288, lon: -49.2720 },
+            { id: 3, name: "Museu Ferroviário", lat: -25.4295, lon: -49.2730 },
+            { id: 4, name: "Teatro Paiol", lat: -25.4300, lon: -49.2680 },
+            { id: 5, name: "Jardim Botânico", lat: -25.4420, lon: -49.2400 },
+            { id: 6, name: "Mercado Municipal", lat: -25.4290, lon: -49.2735 },
+            { id: 7, name: "Teatro Guaíra", lat: -25.4310, lon: -49.2710 },
+            { id: 8, name: "Paço da Liberdade", lat: -25.4280, lon: -49.2725 },
+            { id: 9, name: "Passeio Público", lat: -25.4270, lon: -49.2730 },
+            { id: 10, name: "Memorial Árabe", lat: -25.4265, lon: -49.2735 },
+            { id: 11, name: "Centro Cívico", lat: -25.4150, lon: -49.2600 },
+            { id: 12, name: "Bosque do Papa", lat: -25.4140, lon: -49.2580 },
+            { id: 13, name: "Museu Oscar Niemeyer", lat: -25.4130, lon: -49.2570 },
+            { id: 14, name: "Bosque Alemão", lat: -25.4000, lon: -49.2500 },
+            { id: 15, name: "Unilivre", lat: -25.3900, lon: -49.2450 },
+            { id: 16, name: "Parque São Lourenço", lat: -25.4500, lon: -49.2800 },
+            { id: 17, name: "Ópera de Arame", lat: -25.3800, lon: -49.2400 },
+            { id: 18, name: "Parque Tanguá", lat: -25.3700, lon: -49.2300 },
+            { id: 19, name: "Parque Tingui", lat: -25.3600, lon: -49.2200 },
+            { id: 20, name: "Memorial Ucraniano", lat: -25.3550, lon: -49.2180 },
+            { id: 21, name: "Santa Felicidade", lat: -25.4200, lon: -49.3000 },
+            { id: 22, name: "Parque Barigui", lat: -25.4200, lon: -49.3100 },
+            { id: 23, name: "Torre Panorâmica", lat: -25.4250, lon: -49.2750 },
+            { id: 24, name: "Setor Histórico", lat: -25.4285, lon: -49.2735 }
+        ];
+
+        // Inicializar mapa
+        const map = L.map('map').setView([-25.4290, -49.2671], 13);
+
+        // Adicionar tile layer (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Armazenar marcadores
+        const markers = [];
+        const markerMap = new Map();
+
+        // Criar marcadores customizados
+        function createCustomIcon(number) {
+            return L.divIcon({
+                className: 'custom-marker-div',
+                html: `<div class="custom-marker">${number}</div>`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 20],
+                popupAnchor: [0, -20]
+            });
+        }
+
+        // Adicionar marcadores ao mapa
+        locations.forEach(location => {
+            const marker = L.marker([location.lat, location.lon], {
+                icon: createCustomIcon(location.id)
+            }).addTo(map);
+
+            // Criar popup com link para Google Maps
+            const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${location.lat},${location.lon}`;
+            const popupContent = `
+                <div class="custom-popup">
+                    <h3>${location.id}. ${location.name}</h3>
+                    <a href="${googleMapsUrl}" target="_blank" rel="noopener">
+                        📍 Ver no Google Maps →
+                    </a>
+                </div>
+            `;
+            
+            marker.bindPopup(popupContent);
+            
+            // Armazenar referência
+            markers.push(marker);
+            markerMap.set(location.id, { marker, location });
+            
+            // Evento ao clicar no marcador
+            marker.on('click', () => {
+                highlightLocation(location.id);
+            });
+        });
+
+        // Criar lista de locais
+        const locationsList = document.getElementById('locationsList');
+        
+        locations.forEach(location => {
+            const listItem = document.createElement('div');
+            listItem.className = 'location-item p-3 rounded-lg border border-gray-200';
+            listItem.dataset.locationId = location.id;
+            
+            listItem.innerHTML = `
+                <div class="flex items-center">
+                    <span class="location-number">${location.id}</span>
+                    <span class="font-medium text-gray-800">${location.name}</span>
+                </div>
+            `;
+            
+            // Evento ao clicar no item da lista
+            listItem.addEventListener('click', () => {
+                const { marker, location: loc } = markerMap.get(location.id);
+                
+                // Fazer zoom suave no marcador
+                map.flyTo([loc.lat, loc.lon], 16, {
+                    animate: true,
+                    duration: 1.0
+                });
+                
+                // Abrir popup
+                setTimeout(() => {
+                    marker.openPopup();
+                }, 500);
+                
+                // Destacar item na lista
+                highlightLocation(location.id);
+            });
+            
+            locationsList.appendChild(listItem);
+        });
+
+        // Função para destacar local na lista
+        function highlightLocation(locationId) {
+            // Remover destaque de todos os itens
+            document.querySelectorAll('.location-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Destacar item clicado
+            const item = document.querySelector(`[data-location-id="${locationId}"]`);
+            if (item) {
+                item.classList.add('active');
+                
+                // Scroll suave para o item
+                item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Ajustar altura do mapa em mobile
+        function adjustMapHeight() {
+            const mapElement = document.getElementById('map');
+            if (window.innerWidth <= 768) {
+                mapElement.style.height = '60vh';
+            } else {
+                mapElement.style.height = 'calc(100vh - 80px)';
+            }
+        }
+
+        window.addEventListener('resize', adjustMapHeight);
+        adjustMapHeight();
+    </script>
+</body>
+</html>
+
