@@ -92,6 +92,16 @@ if (menuToggle) {
     });
 }
 
+// Fechar sidebar com botão X
+const sidebarClose = document.getElementById('sidebarClose');
+if (sidebarClose) {
+    sidebarClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeMenu();
+    });
+}
+
 // Fechar menu ao clicar no overlay
 if (navOverlay) {
     navOverlay.addEventListener('click', (e) => {
